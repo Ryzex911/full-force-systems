@@ -3,7 +3,135 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+/* Variant voor het lichte thema. Gebruik: light:hidden of light:bg-white */
+@custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
+
+/*
+ | Kleuren en lettertype uit het Figma-ontwerp ("FFS Kleuren").
+ | Donker is de standaard. De lichte versie staat hieronder bij [data-theme='light'].
+ | Gebruik in Blade bijvoorbeeld: bg-page, bg-surface, text-ink, text-ink-2, border-line, bg-brand.
+ */
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-page: #07090b; /* Figma: bg/page */
+    --color-alt: #0c0f11; /* Figma: bg/alt */
+    --color-surface: #111519; /* Figma: surface/1 */
+    --color-surface-2: #191e24; /* Figma: surface/2 */
+    --color-line: #252c34; /* Figma: border/default */
+
+    --color-ink: #ffffff; /* Figma: text/primary */
+    --color-ink-2: #a6adb4; /* Figma: text/secondary */
+    --color-ink-3: #7b838b; /* Figma: text/muted */
+
+    --color-brand: #e31f2b; /* Figma: brand/red */
+    --color-brand-dark: #c81722; /* hover van rode knoppen */
+    --color-brand-ink: #ff5a63; /* Figma: brand/red-text */
+    --color-brand-soft: #2a1216; /* Figma: brand/red-soft */
+
+    --color-ok: #41d17d; /* Figma: state/success */
+    --color-ok-soft: #10261b; /* Figma: state/success-soft */
+
+    --color-night: #07090b; /* Figma: static/dark, blijft in beide thema's donker */
+}
+
+[data-theme='light'] {
+    --color-page: #ffffff;
+    --color-alt: #f4f6f8;
+    --color-surface: #ffffff;
+    --color-surface-2: #eef1f4;
+    --color-line: #dde2e7;
+
+    --color-ink: #101317;
+    --color-ink-2: #4c545c;
+    --color-ink-3: #6b7280;
+
+    --color-brand-ink: #c81722;
+    --color-brand-soft: #fff2f3;
+
+    --color-ok: #118247;
+    --color-ok-soft: #e8f8ef;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-brand-ink);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        * {
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+/*
+ | Tekststijlen uit Figma. Eén class per stijl, zodat koppen overal hetzelfde zijn.
+ */
+@layer components {
+    /* Vaste paginabreedte: 1200px inhoud met ruimte aan de zijkanten */
+    .wrap {
+        @apply mx-auto w-full max-w-[1248px] px-6;
+    }
+
+    .text-display {
+        @apply text-[40px] leading-[1.05] font-black tracking-[-0.01em] uppercase sm:text-[56px] lg:text-[68px] lg:leading-[72px];
+    }
+
+    .text-h1 {
+        @apply text-[34px] leading-[1.15] font-extrabold tracking-[-0.01em] break-words hyphens-auto lg:text-[48px] lg:leading-[56px];
+    }
+
+    .text-h2 {
+        @apply text-[28px] leading-[1.2] font-extrabold tracking-[-0.005em] break-words hyphens-auto lg:text-[36px] lg:leading-[44px];
+    }
+
+    .text-h3 {
+        @apply text-[22px] leading-[30px] font-bold lg:text-[24px] lg:leading-[32px];
+    }
+
+    .text-h4 {
+        @apply text-[18px] leading-[26px] font-bold;
+    }
+
+    .text-body-lg {
+        @apply text-[17px] leading-[27px] lg:text-[18px] lg:leading-[28px];
+    }
+
+    .text-body {
+        @apply text-[16px] leading-[26px];
+    }
+
+    .text-body-sm {
+        @apply text-[14px] leading-[22px];
+    }
+
+    /* Klein rood/grijs kopje boven een titel */
+    .text-label {
+        @apply text-[13px] leading-4 font-semibold tracking-[0.08em] uppercase;
+    }
+
+    .text-caption {
+        @apply text-[13px] leading-[18px] font-semibold;
+    }
+
+    /* Standaard kaart: achtergrond, rand en ronde hoeken */
+    .card {
+        @apply rounded-xl border border-line bg-surface;
+    }
+
+    /* Rood vierkantje achter een icoon */
+    .icon-tile {
+        @apply flex size-12 shrink-0 items-center justify-center rounded-[10px] bg-brand-soft text-brand-ink;
+    }
 }
