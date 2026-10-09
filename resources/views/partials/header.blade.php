@@ -3,6 +3,8 @@
     De menu-items staan in config/site.php ('nav').
     Het mobiele menu, de themaknop en de keuze particulier/zakelijk werken via resources/js/app.js.
 --}}
+@use('App\Support\Nav')
+
 <header class="sticky top-0 z-40 bg-page">
     {{-- Bovenbalk (alleen vanaf tablet) --}}
     <div class="hidden bg-alt md:block">
@@ -41,7 +43,7 @@
                         @endphp
                         <li>
                             <a
-                                href="{{ $item['route'] ? route($item['route']) : '#' }}"
+                                href="{{ Nav::href($item) }}"
                                 class="relative block py-2 text-[15px] leading-5 font-medium whitespace-nowrap {{ $actief ? 'text-ink' : 'text-ink-2 hover:text-ink' }}"
                                 @if ($actief) aria-current="page" @endif
                             >
@@ -76,9 +78,10 @@
                     <x-button href="#offerte">Offerte aanvragen</x-button>
                 </div>
 
-                {{-- Menuknop voor mobiel --}}
-                <button type="button" data-menu-knop class="flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2 lg:hidden" aria-label="Menu openen" aria-expanded="false" aria-controls="mobiel-menu">
-                    <x-icon name="menu" class="size-6" />
+                {{-- Menuknop voor mobiel: toont een kruisje zolang het menu open is (aria-expanded="true") --}}
+                <button type="button" data-menu-knop class="group flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2 lg:hidden" aria-label="Menu openen" aria-expanded="false" aria-controls="mobiel-menu">
+                    <x-icon name="menu" class="size-6 group-aria-expanded:hidden" />
+                    <x-icon name="close" class="hidden size-6 group-aria-expanded:block" />
                 </button>
             </div>
         </div>
@@ -92,7 +95,7 @@
                     $actief = $item['route'] && request()->routeIs($item['route']);
                 @endphp
                 <a
-                    href="{{ $item['route'] ? route($item['route']) : '#' }}"
+                    href="{{ Nav::href($item) }}"
                     class="rounded-lg px-3 py-3 text-[16px] font-medium {{ $actief ? 'bg-brand-soft text-brand-ink' : 'text-ink-2 hover:bg-surface-2 hover:text-ink' }}"
                     @if ($actief) aria-current="page" @endif
                 >

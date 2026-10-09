@@ -11,11 +11,14 @@
         <title>@yield('title', 'Camera- en alarmsystemen') | {{ config('site.name') }}</title>
         <meta name="description" content="@yield('description', 'Camera- en alarmsystemen voor woning en bedrijf. Persoonlijk advies en professionele installatie in Gelderland, Brabant en Limburg.')">
 
-        {{-- Zet het gekozen thema (licht/donker) vóór het tekenen van de pagina, zodat het niet knippert --}}
+        {{-- Zet het gekozen thema en klanttype vóór het tekenen van de pagina, zodat het niet knippert --}}
         <script>
             try {
                 const thema = localStorage.getItem('ffs-thema');
                 if (thema) document.documentElement.dataset.theme = thema;
+
+                const klant = localStorage.getItem('ffs-klanttype');
+                if (klant) document.documentElement.dataset.klant = klant;
             } catch (e) {}
         </script>
 

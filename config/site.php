@@ -33,21 +33,24 @@ return [
 
     /*
     | Hoofdnavigatie. 'route' is de naam van de route in routes/web.php.
-    | Pagina's die nog niet bestaan hebben nog geen route en linken naar '#'.
+    | Zolang een pagina nog niet bestaat (route null), springt de link naar het blok
+    | 'anchor' op de homepage. Zonder route en zonder anchor wordt de link '#'.
+    | De link zelf wordt gemaakt in app/Support/Nav.php.
     */
     'nav' => [
-        ['label' => 'Home', 'route' => 'home'],
-        ['label' => 'Diensten', 'route' => null],
-        ['label' => 'Pakketten', 'route' => null],
-        ['label' => 'Webshop', 'route' => null],
-        ['label' => 'Projecten', 'route' => null],
-        ['label' => 'Over ons', 'route' => null],
-        ['label' => 'Contact', 'route' => null],
+        ['label' => 'Home', 'route' => 'home', 'anchor' => null],
+        ['label' => 'Diensten', 'route' => null, 'anchor' => 'diensten'],
+        ['label' => 'Pakketten', 'route' => null, 'anchor' => 'pakketten'],
+        ['label' => 'Webshop', 'route' => null, 'anchor' => 'webshop'],
+        ['label' => 'Projecten', 'route' => null, 'anchor' => 'projecten'],
+        ['label' => 'Over ons', 'route' => null, 'anchor' => null],
+        ['label' => 'Contact', 'route' => null, 'anchor' => 'offerte'],
     ],
 
     /*
     | De vijf diensten. De eerste twee (camera en alarm) staan uitgelicht op de homepage
-    | en hebben daarom ook 'points' (opsomming) en eventueel een 'image'.
+    | en hebben daarom ook 'points' (opsomming) en eventueel een 'image' (pad binnen public/).
+    | Foto's in public/images/voorbeeld/ zijn tijdelijk (Unsplash) tot de opdrachtgever eigen foto's levert.
     */
     'services' => [
         [
@@ -55,7 +58,7 @@ return [
             'title' => 'Camerabewaking',
             'text' => 'Scherp beeld van uw woning of bedrijfspand, dag en nacht. Wij adviseren, installeren en leggen uit hoe u meekijkt.',
             'points' => ['Advies op locatie', 'Montage en afstelling', 'Uitleg bij oplevering'],
-            'image' => 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=70',
+            'image' => 'images/voorbeeld/camera.jpg',
         ],
         [
             'icon' => 'alarm',

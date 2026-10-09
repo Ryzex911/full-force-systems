@@ -1,5 +1,5 @@
 {{-- Recente projecten ($projects uit HomeController) --}}
-<section class="bg-alt py-16 lg:py-24">
+<section id="projecten" class="scroll-mt-32 bg-alt py-16 lg:py-24">
     <div class="wrap flex flex-col gap-12">
         <div class="flex flex-wrap items-end justify-between gap-4">
             <x-section-heading label="Projecten" title="Recent opgeleverd" />

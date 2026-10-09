@@ -41,7 +41,7 @@
                     {{-- Foto of, als er geen foto is, het icoon van de dienst --}}
                     <div class="hidden w-[200px] shrink-0 items-center justify-center bg-surface-2 text-ink-3 sm:flex">
                         @if ($dienst['image'])
-                            <img src="{{ $dienst['image'] }}" alt="" class="size-full object-cover" loading="lazy">
+                            <img src="{{ asset($dienst['image']) }}" alt="" class="size-full object-cover" loading="lazy">
                         @else
                             <x-icon :name="$dienst['icon']" class="size-[72px]" />
                         @endif

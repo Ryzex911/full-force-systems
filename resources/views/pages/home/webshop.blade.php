@@ -1,5 +1,5 @@
 {{-- Uitgelichte producten uit de webshop ($products uit HomeController, nu nog voorbeelddata) --}}
-<section class="py-16 lg:py-24">
+<section id="webshop" class="scroll-mt-32 py-16 lg:py-24">
     <div class="wrap flex flex-col gap-12">
         <div class="flex flex-wrap items-end justify-between gap-4">
             <x-section-heading label="Webshop" title="Zelf bestellen" text="Dezelfde producten die wij installeren, ook los te koop." />

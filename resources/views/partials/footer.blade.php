@@ -1,6 +1,8 @@
 {{--
     Footer met bedrijfsgegevens. Alles komt uit config/site.php.
 --}}
+@use('App\Support\Nav')
+
 <footer class="bg-alt">
     <div class="wrap grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-[320px_1fr_1fr_240px] lg:gap-16 lg:py-[72px]">
         <div class="flex flex-col items-start gap-5">
@@ -22,7 +24,7 @@
             <ul class="text-body-sm flex flex-col gap-3.5 text-ink-2">
                 @foreach (config('site.nav') as $item)
                     <li>
-                        <a href="{{ $item['route'] ? route($item['route']) : '#' }}" class="hover:text-ink">{{ $item['label'] }}</a>
+                        <a href="{{ Nav::href($item) }}" class="hover:text-ink">{{ $item['label'] }}</a>
                     </li>
                 @endforeach
             </ul>

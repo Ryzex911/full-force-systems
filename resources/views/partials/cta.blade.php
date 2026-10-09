@@ -12,14 +12,15 @@
                 </p>
 
                 <div class="flex flex-wrap gap-3">
-                    <x-button href="#">Offerte aanvragen</x-button>
+                    {{-- Tijdelijk een e-mail; later naar de pagina "Contact en offerte" met het formulier --}}
+                    <x-button :href="'mailto:'.config('site.email').'?subject='.rawurlencode('Offerteaanvraag')">Offerte aanvragen</x-button>
                     <x-button variant="secondary" :href="config('site.phone_href')">Bel {{ config('site.phone') }}</x-button>
                 </div>
             </div>
 
             <div class="h-56 shrink-0 bg-surface-2 lg:h-auto lg:w-[420px]">
                 <img
-                    src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=70"
+                    src="{{ asset('images/voorbeeld/offerte.jpg') }}"
                     alt=""
                     class="size-full object-cover"
                     loading="lazy"

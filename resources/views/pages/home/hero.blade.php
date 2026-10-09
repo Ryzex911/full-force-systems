@@ -4,7 +4,7 @@
 --}}
 <section class="relative isolate overflow-hidden bg-night">
     <img
-        src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=1920&q=70"
+        src="{{ asset('images/voorbeeld/hero-camera.jpg') }}"
         alt=""
         class="absolute inset-0 -z-20 size-full object-cover"
         fetchpriority="high"
@@ -26,9 +26,14 @@
                 {{ implode(', ', array_slice(config('site.regions'), 0, -1)) }} en {{ last(config('site.regions')) }}.
             </p>
 
-            <div class="flex flex-wrap gap-3">
+            {{-- De hoofdactie (rode knop) volgt de keuze particulier / zakelijk in de header --}}
+            <div class="flex flex-wrap gap-3 zakelijk:hidden">
                 <x-button href="#pakketten">Pakket bekijken</x-button>
                 <x-button variant="on-image" href="#offerte">Offerte aanvragen</x-button>
+            </div>
+            <div class="hidden flex-wrap gap-3 zakelijk:flex">
+                <x-button href="#offerte">Offerte aanvragen</x-button>
+                <x-button variant="on-image" href="#pakketten">Pakketten bekijken</x-button>
             </div>
         </div>
 

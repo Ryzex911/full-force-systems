@@ -1,3 +1,7 @@
+# Projectcontext
+
+Lees eerst het projectoverzicht: @docs/project-context.md
+
 <laravel-boost-guidelines>
 # Laravel Application
 
