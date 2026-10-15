@@ -1,8 +1,8 @@
 /*
  | Kleine stukjes gedrag voor de hele site:
  |  1. Wisselen tussen donker en licht thema
- |  2. Mobiel menu openen en sluiten
- |  3. Keuze particulier / zakelijk onthouden
+ |  2. Mobiel menu openen en sluiten (ook met Escape)
+ |  3. Keuze particulier / zakelijk onthouden en overal gelijk houden
  */
 
 /** Lees een waarde uit localStorage. Geeft null terug als opslag niet beschikbaar is. */
@@ -41,39 +41,69 @@ const menuKnop = document.querySelector('[data-menu-knop]');
 const mobielMenu = document.getElementById('mobiel-menu');
 
 if (menuKnop && mobielMenu) {
-    menuKnop.addEventListener('click', () => {
-        const isOpen = !mobielMenu.classList.toggle('hidden');
+    const zetMenu = (open) => {
+        mobielMenu.classList.toggle('hidden', !open);
+        menuKnop.setAttribute('aria-expanded', String(open));
+        menuKnop.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
+    };
 
-        menuKnop.setAttribute('aria-expanded', String(isOpen));
-        menuKnop.setAttribute('aria-label', isOpen ? 'Menu sluiten' : 'Menu openen');
-    });
+    menuKnop.addEventListener('click', () => zetMenu(mobielMenu.classList.contains('hidden')));
 
     // Sluit het menu als je op een link in het menu klikt.
     mobielMenu.querySelectorAll('a').forEach((link) => {
-        link.addEventListener('click', () => {
-            mobielMenu.classList.add('hidden');
-            menuKnop.setAttribute('aria-expanded', 'false');
-            menuKnop.setAttribute('aria-label', 'Menu openen');
-        });
+        link.addEventListener('click', () => zetMenu(false));
+    });
+
+    // Sluit het menu met de Escape-toets en zet de focus terug op de menuknop.
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !mobielMenu.classList.contains('hidden')) {
+            zetMenu(false);
+            menuKnop.focus();
+        }
     });
 }
 
 // 3. Particulier / zakelijk ------------------------------------------------
-// De knoppen hebben data-klanttype="particulier" of data-klanttype="zakelijk".
+// Overal dezelfde keuze:
+//  - de knoppen in de header (data-klanttype="particulier" of "zakelijk")
+//  - links die de keuze vastzetten, zoals "Mijn bedrijf" in de hero (data-kies-klant="zakelijk")
+//  - de keuze in het offerteformulier (input name="klanttype")
 function kiesKlanttype(type) {
     document.querySelectorAll('[data-klanttype]').forEach((knop) => {
         knop.setAttribute('aria-pressed', String(knop.dataset.klanttype === type));
     });
 
-    // Ook op <html>, zodat CSS of andere scripts de keuze kunnen gebruiken.
+    document.querySelectorAll('input[name="klanttype"]').forEach((keuze) => {
+        keuze.checked = keuze.value === type;
+    });
+
+    // Ook op <html>, zodat CSS (de variant zakelijk:) de keuze kan gebruiken.
     document.documentElement.dataset.klant = type;
 }
 
+function kiesEnBewaar(type) {
+    kiesKlanttype(type);
+    bewaar('ffs-klanttype', type);
+}
+
 document.querySelectorAll('[data-klanttype]').forEach((knop) => {
-    knop.addEventListener('click', () => {
-        kiesKlanttype(knop.dataset.klanttype);
-        bewaar('ffs-klanttype', knop.dataset.klanttype);
-    });
+    knop.addEventListener('click', () => kiesEnBewaar(knop.dataset.klanttype));
 });
 
-kiesKlanttype(lees('ffs-klanttype') || 'particulier');
+document.querySelectorAll('[data-kies-klant]').forEach((link) => {
+    link.addEventListener('click', () => kiesEnBewaar(link.dataset.kiesKlant));
+});
+
+document.querySelectorAll('input[name="klanttype"]').forEach((keuze) => {
+    keuze.addEventListener('change', () => kiesEnBewaar(keuze.value));
+});
+
+// Staat de keuze in het formulier al vast (uit de link, bijv. ?klant=zakelijk, of na een fout),
+// dan volgt de header het formulier. Anders geldt de bewaarde keuze.
+const vasteKeuze = document.querySelector('[data-klant-vast]')?.dataset.klantVast;
+
+if (vasteKeuze) {
+    kiesEnBewaar(vasteKeuze);
+} else {
+    kiesKlanttype(lees('ffs-klanttype') || 'particulier');
+}

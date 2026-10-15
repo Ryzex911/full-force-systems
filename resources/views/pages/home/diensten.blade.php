@@ -1,6 +1,6 @@
 {{--
     Diensten: de eerste twee (camera en alarm) groot uitgelicht, de andere drie als kaart.
-    De diensten staan in config/site.php ('services').
+    De diensten staan in config/site.php ('services'). De links gaan naar de pagina Diensten.
 --}}
 @php
     $uitgelicht = array_slice(config('site.services'), 0, 2);
@@ -35,7 +35,7 @@
                             @endforeach
                         </ul>
 
-                        <x-button variant="link" href="#" class="mt-auto">Meer over {{ strtolower($dienst['title']) }}</x-button>
+                        <x-button variant="link" :href="route('diensten').'#'.$dienst['slug']" class="mt-auto">Meer over {{ strtolower($dienst['title']) }}</x-button>
                     </div>
 
                     {{-- Foto of, als er geen foto is, het icoon van de dienst --}}
@@ -52,7 +52,7 @@
 
         <div class="grid gap-6 md:grid-cols-3">
             @foreach ($overig as $dienst)
-                <x-service-card :icon="$dienst['icon']" :title="$dienst['title']" :text="$dienst['text']" />
+                <x-service-card :icon="$dienst['icon']" :title="$dienst['title']" :text="$dienst['text']" :href="route('diensten').'#'.$dienst['slug']" />
             @endforeach
         </div>
     </div>

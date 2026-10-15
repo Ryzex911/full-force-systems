@@ -1,5 +1,6 @@
 {{--
-    Partners ($partners uit HomeController).
+    Partners. Gebruik: @include('partials.partners', ['partners' => config('site.partners')])
+    De homepage geeft er zes mee, de pagina Over ons alle elf.
     Nu nog als tekst; vervangen door logo's zodra de opdrachtgever die aanlevert.
 --}}
 <section class="mb-12 bg-alt py-14" aria-label="Partners">

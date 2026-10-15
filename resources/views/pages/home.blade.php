@@ -12,9 +12,9 @@
     @include('pages.home.usps')
     @include('pages.home.diensten')
     @include('pages.home.pakketten')
-    @include('pages.home.werkwijze')
+    @include('partials.werkwijze')
     @include('pages.home.projecten')
     @include('pages.home.webshop')
-    @include('pages.home.partners')
+    @include('partials.partners')
     @include('partials.cta')
 @endsection

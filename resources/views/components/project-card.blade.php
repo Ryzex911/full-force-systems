@@ -1,8 +1,9 @@
 {{--
     Kaart voor één project.
     Gebruik: <x-project-card tag="Camera + alarm" title="..." location="Beuningen" :image="$url" alt="..." />
+    href: link naar de projectpagina (zodra die bestaat). Zonder href is de titel geen link.
 --}}
-@props(['tag', 'title', 'location', 'image', 'alt' => '', 'href' => '#'])
+@props(['tag', 'title', 'location', 'image', 'alt' => '', 'href' => null])
 
 <article {{ $attributes->merge(['class' => 'card flex flex-col overflow-hidden']) }}>
     <div class="h-60 bg-surface-2">
@@ -13,7 +14,11 @@
         <p class="text-label text-brand-ink">{{ $tag }}</p>
 
         <h3 class="text-h4 text-ink">
-            <a href="{{ $href }}" class="hover:underline">{{ $title }}</a>
+            @if ($href)
+                <a href="{{ $href }}" class="hover:underline">{{ $title }}</a>
+            @else
+                {{ $title }}
+            @endif
         </h3>
 
         <p class="text-body-sm flex items-center gap-1.5 text-ink-2">

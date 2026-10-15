@@ -1,6 +1,8 @@
 {{--
     Blok "Op zoek naar een beveiligingsoplossing?" Kan op elke pagina onderaan worden gezet met @include('partials.cta').
 --}}
+@use('App\Support\Nav')
+
 <section id="offerte" class="scroll-mt-32 pb-16 lg:pb-24">
     <div class="wrap">
         <div class="card flex flex-col overflow-hidden rounded-2xl lg:flex-row">
@@ -12,8 +14,7 @@
                 </p>
 
                 <div class="flex flex-wrap gap-3">
-                    {{-- Tijdelijk een e-mail; later naar de pagina "Contact en offerte" met het formulier --}}
-                    <x-button :href="'mailto:'.config('site.email').'?subject='.rawurlencode('Offerteaanvraag')">Offerte aanvragen</x-button>
+                    <x-button :href="Nav::quote()">Offerte aanvragen</x-button>
                     <x-button variant="secondary" :href="config('site.phone_href')">Bel {{ config('site.phone') }}</x-button>
                 </div>
             </div>

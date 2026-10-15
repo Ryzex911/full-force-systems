@@ -2,6 +2,8 @@
     Hero: grote kop op een foto, met rechts de keuzehulp "woning of bedrijf".
     Deze sectie blijft ook in het lichte thema donker, omdat de witte tekst op de foto staat.
 --}}
+@use('App\Support\Nav')
+
 <section class="relative isolate overflow-hidden bg-night">
     <img
         src="{{ asset('images/voorbeeld/hero-camera.jpg') }}"
@@ -29,20 +31,23 @@
             {{-- De hoofdactie (rode knop) volgt de keuze particulier / zakelijk in de header --}}
             <div class="flex flex-wrap gap-3 zakelijk:hidden">
                 <x-button href="#pakketten">Pakket bekijken</x-button>
-                <x-button variant="on-image" href="#offerte">Offerte aanvragen</x-button>
+                <x-button variant="on-image" :href="Nav::quote()">Offerte aanvragen</x-button>
             </div>
             <div class="hidden flex-wrap gap-3 zakelijk:flex">
-                <x-button href="#offerte">Offerte aanvragen</x-button>
+                <x-button :href="Nav::quote()">Offerte aanvragen</x-button>
                 <x-button variant="on-image" href="#pakketten">Pakketten bekijken</x-button>
             </div>
         </div>
 
-        {{-- Keuzehulp: particulier gaat naar de pakketten, zakelijk naar de offerte --}}
+        {{--
+            Keuzehulp: particulier gaat naar de pakketten, zakelijk naar het offerteformulier.
+            data-kies-klant zet bij een klik ook de keuze particulier/zakelijk in de header (zie app.js).
+        --}}
         <div class="flex w-full flex-col gap-4 rounded-2xl border border-line bg-surface p-7 lg:w-[420px] lg:shrink-0">
             <p class="text-label text-brand-ink">Start hier</p>
             <h2 class="text-h3 text-ink">Waar zoekt u beveiliging voor?</h2>
 
-            <a href="#pakketten" class="group flex items-center gap-4 rounded-xl bg-surface-2 p-[18px] transition-colors hover:bg-line">
+            <a href="#pakketten" data-kies-klant="particulier" class="group flex items-center gap-4 rounded-xl bg-surface-2 p-[18px] transition-colors hover:bg-line">
                 <span class="icon-tile size-11">
                     <x-icon name="home" class="size-[22px]" />
                 </span>
@@ -53,7 +58,7 @@
                 <x-icon name="arrow" class="size-5 text-ink-2 transition-transform group-hover:translate-x-1" />
             </a>
 
-            <a href="#offerte" class="group flex items-center gap-4 rounded-xl bg-surface-2 p-[18px] transition-colors hover:bg-line">
+            <a href="{{ Nav::quote(['klant' => 'zakelijk']) }}" data-kies-klant="zakelijk" class="group flex items-center gap-4 rounded-xl bg-surface-2 p-[18px] transition-colors hover:bg-line">
                 <span class="icon-tile size-11">
                     <x-icon name="building" class="size-[22px]" />
                 </span>
