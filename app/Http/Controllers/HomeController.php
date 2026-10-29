@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\Catalog;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -9,16 +10,16 @@ class HomeController extends Controller
     /**
      * Toon de homepage.
      *
-     * Let op: de gegevens hieronder zijn tijdelijke voorbeelddata voor de front-end.
-     * Zodra de database er is, komen pakketten, producten en projecten uit modellen.
+     * Let op: de gegevens zijn tijdelijke voorbeelddata voor de front-end. Pakketten en producten staan
+     * in App\Support\Catalog, omdat ze ook op andere pagina's staan. Zodra de database er is, komen ze uit modellen.
      */
     public function __invoke(): View
     {
         return view('pages.home', [
             'usps' => $this->usps(),
-            'packages' => $this->packages(),
+            'packages' => Catalog::packages(),
             'projects' => $this->projects(),
-            'products' => $this->products(),
+            'products' => array_values(array_filter(Catalog::products(), fn ($product) => $product['featured'])),
             'partners' => array_slice(config('site.partners'), 0, 6),
         ]);
     }
@@ -31,34 +32,6 @@ class HomeController extends Controller
             ['icon' => 'users', 'text' => 'Persoonlijk advies en maatwerk'],
             ['icon' => 'wrench', 'text' => 'Professionele installatie en duidelijke uitleg'],
             ['icon' => 'clock', 'text' => 'Snelle en persoonlijke service'],
-        ];
-    }
-
-    /** VOORBEELD: definitieve pakketten en prijzen volgen van de opdrachtgever. */
-    private function packages(): array
-    {
-        return [
-            [
-                'name' => 'Basis',
-                'price' => '€ 899',
-                'text' => 'Voor een appartement of tussenwoning.',
-                'features' => ["2 buitencamera's", 'Recorder met opslag', 'Installatie en uitleg'],
-                'featured' => false,
-            ],
-            [
-                'name' => 'Plus',
-                'price' => '€ 1.499',
-                'text' => 'Voor een vrijstaande woning met tuin.',
-                'features' => ["4 buitencamera's", 'Recorder met opslag', 'Alarmsysteem met sensoren', 'Installatie en uitleg'],
-                'featured' => true,
-            ],
-            [
-                'name' => 'Compleet',
-                'price' => '€ 2.299',
-                'text' => 'Camera, alarm en video-intercom in één.',
-                'features' => ["4 buitencamera's", 'Alarmsysteem met sensoren', 'Video-intercom', 'Installatie en uitleg'],
-                'featured' => false,
-            ],
         ];
     }
 
@@ -87,23 +60,6 @@ class HomeController extends Controller
                 'image' => asset('images/voorbeeld/project-woonhuis.jpg'),
                 'alt' => 'Moderne woning in de avond',
             ],
-        ];
-    }
-
-    /** VOORBEELD: echte producten, prijzen en foto's volgen van de opdrachtgever. */
-    private function products(): array
-    {
-        return [
-            [
-                'icon' => 'camera',
-                'category' => "Camera's",
-                'title' => '4K IP-camera buiten',
-                'price' => '€ 199,00',
-                'image' => asset('images/voorbeeld/camera.jpg'),
-            ],
-            ['icon' => 'recorder', 'category' => 'Recorders', 'title' => 'NVR-recorder 8 kanalen', 'price' => '€ 249,00', 'image' => null],
-            ['icon' => 'alarm', 'category' => 'Alarmsystemen', 'title' => 'Draadloze alarmset', 'price' => '€ 349,00', 'image' => null],
-            ['icon' => 'intercom', 'category' => 'Intercom', 'title' => 'Video-deurbel met monitor', 'price' => '€ 279,00', 'image' => null],
         ];
     }
 }

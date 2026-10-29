@@ -21,6 +21,7 @@
                     :title="$product['title']"
                     :price="$product['price']"
                     :image="$product['image']"
+                    :in-stock="$product['in_stock']"
                 />
             @endforeach
         </div>
