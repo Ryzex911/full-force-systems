@@ -118,6 +118,56 @@ class Catalog
     }
 
     /**
+     * Uitgevoerde projecten (homepage en pagina Projecten).
+     * Alleen "Tax administraties" is echt (wensenformulier, vraag 13); de andere twee zijn VOORBEELDEN.
+     * 'services' = slugs uit config('site.services'), voor het filter op de pagina Projecten.
+     * De foto's zijn tijdelijk (Unsplash); de opdrachtgever levert eigen projectfoto's.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function projects(): array
+    {
+        return [
+            [
+                'slug' => 'tax-administraties',
+                'tag' => 'Camera + alarm',
+                'title' => 'Tax administraties',
+                'location' => 'Beuningen (GLD)',
+                'text' => 'Installatie van een camera- en alarmsysteem voor een kantoor in Beuningen.',
+                'services' => ['camerabewaking', 'alarmsystemen'],
+                'type' => 'Zakelijk',
+                'image' => asset('images/voorbeeld/project-kantoor.jpg'),
+                'alt' => 'Kantoorgang met glazen wanden',
+                'featured' => true,
+            ],
+            [
+                'slug' => 'winkelpand',
+                'tag' => 'Camerabewaking',
+                'title' => 'Winkelpand (voorbeeld)',
+                'location' => 'Locatie volgt',
+                'text' => null,
+                'services' => ['camerabewaking'],
+                'type' => 'Zakelijk',
+                'image' => asset('images/voorbeeld/project-winkel.jpg'),
+                'alt' => 'Interieur van een kledingwinkel',
+                'featured' => false,
+            ],
+            [
+                'slug' => 'woonhuis',
+                'tag' => 'Alarmsysteem',
+                'title' => 'Woonhuis (voorbeeld)',
+                'location' => 'Locatie volgt',
+                'text' => null,
+                'services' => ['alarmsystemen'],
+                'type' => 'Particulier',
+                'image' => asset('images/voorbeeld/project-woonhuis.jpg'),
+                'alt' => 'Moderne woning in de avond',
+                'featured' => false,
+            ],
+        ];
+    }
+
+    /**
      * Producten zoeken op slug, in de volgorde waarin je ze vraagt. Onbekende slugs worden overgeslagen.
      *
      * @param  array<int, string>  $slugs

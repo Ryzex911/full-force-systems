@@ -56,6 +56,14 @@
 
         <main id="inhoud">
             @yield('content')
+
+            {{-- Pagina's van Laravel Breeze (zoals het profiel) gebruiken <x-app-layout>: hun inhoud zit in $header en $slot --}}
+            @isset($slot)
+                @isset($header)
+                    <div class="wrap pt-12">{{ $header }}</div>
+                @endisset
+                {{ $slot }}
+            @endisset
         </main>
 
         @include('partials.footer')

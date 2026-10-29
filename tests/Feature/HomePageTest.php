@@ -24,16 +24,12 @@ class HomePageTest extends TestCase
         $response->assertSee(config('site.email'));
     }
 
-    public function test_menu_links_point_to_sections_on_the_homepage(): void
+    public function test_menu_links_point_to_the_pages(): void
     {
         $response = $this->get(route('home'));
 
-        // Projecten heeft nog geen eigen pagina: die link springt naar het blok op de homepage
-        $response->assertSee('href="'.route('home').'#projecten"', false);
-        $response->assertSee('id="projecten"', false);
-
         // Pagina's die al bestaan krijgen een gewone link
-        foreach (['diensten', 'pakketten', 'webshop', 'over-ons', 'contact'] as $page) {
+        foreach (['diensten', 'pakketten', 'webshop', 'projecten', 'over-ons', 'contact'] as $page) {
             $response->assertSee('href="'.route($page).'"', false);
         }
     }

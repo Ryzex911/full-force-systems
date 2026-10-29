@@ -18,7 +18,7 @@ class HomeController extends Controller
         return view('pages.home', [
             'usps' => $this->usps(),
             'packages' => Catalog::packages(),
-            'projects' => $this->projects(),
+            'projects' => Catalog::projects(),
             'products' => array_values(array_filter(Catalog::products(), fn ($product) => $product['featured'])),
             'partners' => array_slice(config('site.partners'), 0, 6),
         ]);
@@ -32,34 +32,6 @@ class HomeController extends Controller
             ['icon' => 'users', 'text' => 'Persoonlijk advies en maatwerk'],
             ['icon' => 'wrench', 'text' => 'Professionele installatie en duidelijke uitleg'],
             ['icon' => 'clock', 'text' => 'Snelle en persoonlijke service'],
-        ];
-    }
-
-    /** Alleen "Tax administraties" is een echt project; de andere twee zijn VOORBEELDEN. */
-    private function projects(): array
-    {
-        return [
-            [
-                'tag' => 'Camera + alarm',
-                'title' => 'Tax administraties',
-                'location' => 'Beuningen (GLD)',
-                'image' => asset('images/voorbeeld/project-kantoor.jpg'),
-                'alt' => 'Kantoorgang met glazen wanden',
-            ],
-            [
-                'tag' => 'Camerabewaking',
-                'title' => 'Winkelpand (voorbeeld)',
-                'location' => 'Locatie volgt',
-                'image' => asset('images/voorbeeld/project-winkel.jpg'),
-                'alt' => 'Interieur van een kledingwinkel',
-            ],
-            [
-                'tag' => 'Alarmsysteem',
-                'title' => 'Woonhuis (voorbeeld)',
-                'location' => 'Locatie volgt',
-                'image' => asset('images/voorbeeld/project-woonhuis.jpg'),
-                'alt' => 'Moderne woning in de avond',
-            ],
         ];
     }
 }

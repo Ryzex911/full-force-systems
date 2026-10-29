@@ -60,15 +60,15 @@
             <p>© {{ date('Y') }} {{ config('site.name') }} — handelsnaam van {{ config('site.legal_name') }}</p>
 
             {{--
-                Juridische pagina's: de teksten moeten nog van de opdrachtgever komen (wensenformulier, vraag 18).
-                Een link verschijnt vanzelf zodra de route bestaat, bijvoorbeeld Route::view('/privacy', ...)->name('privacy').
+                Juridische pagina's (routes legal.* in routes/web.php, teksten in config/legal.php).
+                De teksten zijn nog concepten; de opdrachtgever moet ze controleren (wensenformulier, vraag 18).
             --}}
             @php
                 $juridisch = collect([
-                    'privacy' => 'Privacyverklaring',
-                    'voorwaarden' => 'Algemene voorwaarden',
-                    'cookies' => 'Cookiebeleid',
-                    'retourneren' => 'Retourneren',
+                    'legal.privacy' => 'Privacyverklaring',
+                    'legal.terms' => 'Algemene voorwaarden',
+                    'legal.cookies' => 'Cookiebeleid',
+                    'legal.returns' => 'Retourneren',
                 ])->filter(fn ($label, $route) => Nav::page($route));
             @endphp
 

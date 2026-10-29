@@ -58,17 +58,25 @@
             </nav>
 
             <div class="flex items-center gap-1 sm:gap-2">
-                {{-- Zoeken, account en winkelwagen verschijnen vanzelf zodra de route bestaat (zie Nav::page) --}}
+                {{-- Zoeken en winkelwagen verschijnen vanzelf zodra de route bestaat (zie Nav::page) --}}
                 @if ($link = Nav::page('zoeken'))
                     <a href="{{ $link }}" class="hidden size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2 sm:flex" aria-label="Zoeken">
                         <x-icon name="search" class="size-[22px]" />
                     </a>
                 @endif
-                @if ($link = Nav::page('account'))
-                    <a href="{{ $link }}" class="flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Mijn account">
+
+                {{-- Account: niet ingelogd → inlogpagina; ingelogd → Mijn account (dashboard). Een rood stipje = ingelogd. --}}
+                @auth
+                    <a href="{{ route('dashboard') }}" class="relative flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Mijn account" title="Mijn account">
+                        <x-icon name="user" class="size-[22px]" />
+                        <span class="absolute top-2 right-2 size-2 rounded-full bg-brand ring-2 ring-page" aria-hidden="true"></span>
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Inloggen" title="Inloggen">
                         <x-icon name="user" class="size-[22px]" />
                     </a>
-                @endif
+                @endauth
+
                 @if ($link = Nav::page('winkelwagen'))
                     <a href="{{ $link }}" class="flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Winkelwagen">
                         <x-icon name="cart" class="size-[22px]" />
@@ -115,6 +123,11 @@
                     @include('partials.klanttype-keuze')
                 </div>
                 <x-button :href="Nav::quote()" class="w-full">Offerte aanvragen</x-button>
+                @auth
+                    <x-button variant="secondary" :href="route('dashboard')" class="w-full">Mijn account</x-button>
+                @else
+                    <x-button variant="secondary" :href="route('login')" class="w-full">Inloggen</x-button>
+                @endauth
                 <a href="{{ config('site.phone_href') }}" class="text-body-sm flex items-center gap-2 text-ink-2">
                     <x-icon name="phone" class="size-4 text-ink-3" />
                     {{ config('site.phone') }} · {{ config('site.hours') }}

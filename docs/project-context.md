@@ -47,6 +47,13 @@ Bouw pagina's dus met voorbeelddata in de controller, niet met modellen of migra
   - Op de dienstenpagina heet de knop bij elke dienst nu "Meer informatie" (naar de detailpagina).
   - Over ons en Contact zijn gebouwd zonder Figma; vergelijk ze nog met het ontwerp.
 
+- Branch `feature/projecten` (vanaf `main` na PR #6):
+  - **`main` gerepareerd:** `routes/web.php` crashte na het samenvoegen (dubbele `use ... Route` en een tweede route voor `/` naar de niet-bestaande view `welcome`).
+  - **Projecten** (`/projecten`): uitgelicht project, filter per dienst (`?dienst=...`), raster met projecten en een kaart "Uw project hier?". De projecten staan in `Catalog::projects()`.
+  - **Inloggen in de header:** het persoon-icoon gaat naar `/login` als je niet bent ingelogd, en naar "Mijn account" (`/dashboard`) als je wel bent ingelogd. "Mijn account" toont naam, e-mail, "Gegevens wijzigen" en "Uitloggen".
+  - Breeze-pagina's met `<x-app-layout>` (zoals het profiel) tonen hun inhoud nu binnen de site-layout. Het ontbrekende logo `images/full-force-mark.svg` van de inlogpagina is toegevoegd, en de footer linkt naar de juridische pagina's (`legal.*`).
+  - Nog open op `main`: de juridische pagina's zijn op mobiel te breed (1412 px), Alpine wordt niet geladen, de inlogpagina's gebruiken "je" in plaats van "u", en de profielpagina heeft nog de standaardopmaak van Breeze. `tailwind.config.js` en `postcss.config.js` (Tailwind 3) zijn niet meer nodig.
+
 ### Volgende stappen, in deze volgorde
 
 1. Over ons en Contact naast het Figma-ontwerp leggen en waar nodig aanpassen.

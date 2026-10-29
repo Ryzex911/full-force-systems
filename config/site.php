@@ -42,7 +42,7 @@ return [
         ['label' => 'Diensten', 'route' => 'diensten', 'anchor' => null],
         ['label' => 'Pakketten', 'route' => 'pakketten', 'anchor' => null],
         ['label' => 'Webshop', 'route' => 'webshop', 'anchor' => null],
-        ['label' => 'Projecten', 'route' => null, 'anchor' => 'projecten'],
+        ['label' => 'Projecten', 'route' => 'projecten', 'anchor' => null],
         ['label' => 'Over ons', 'route' => 'over-ons', 'anchor' => null],
         ['label' => 'Contact', 'route' => 'contact', 'anchor' => null],
     ],
