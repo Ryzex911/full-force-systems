@@ -1,11 +1,12 @@
 {{--
     Kaart voor één pakket. Met featured krijgt de kaart een rode rand en het label "Meest gekozen".
     Gebruik: <x-package-card name="Plus" price="€ 1.499" text="..." :features="$lijst" featured />
-    De knop gaat naar het offerteformulier met het pakket al ingevuld. Geef href mee voor een andere bestemming,
-    bijvoorbeeld later een detailpagina van het pakket.
+    De pakketten zelf staan in App\Support\Catalog::packages().
+    Standaard is de knop "Pakket kiezen" en gaat hij naar het offerteformulier met het pakket al ingevuld.
+    Andere knop: button="Pakket bekijken" :href="route('pakketten')" (zo staat hij op de homepage).
 --}}
 @use('App\Support\Nav')
-@props(['name', 'price', 'text', 'features' => [], 'featured' => false, 'href' => null])
+@props(['name', 'price', 'text', 'features' => [], 'featured' => false, 'href' => null, 'button' => 'Pakket kiezen'])
 
 <article {{ $attributes->merge(['class' => 'flex flex-col gap-5 rounded-2xl bg-surface p-8 '.($featured ? 'border-2 border-brand' : 'border border-line')]) }}>
     <div class="flex items-center justify-between gap-3">
@@ -29,6 +30,6 @@
         :variant="$featured ? 'primary' : 'secondary'"
         :href="$href ?? Nav::quote(['pakket' => $name])"
         class="mt-auto w-full"
-        aria-label="Pakket aanvragen: {{ $name }}"
-    >Pakket aanvragen</x-button>
+        aria-label="{{ $button }}: {{ $name }}"
+    >{{ $button }}</x-button>
 </article>

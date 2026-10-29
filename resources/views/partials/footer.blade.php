@@ -35,7 +35,7 @@
             <ul class="text-body-sm flex flex-col gap-3.5 text-ink-2">
                 @foreach (config('site.services') as $dienst)
                     <li>
-                        <a href="{{ route('diensten') }}#{{ $dienst['slug'] }}" class="hover:text-ink">{{ $dienst['title'] }}</a>
+                        <a href="{{ route('diensten.show', $dienst['slug']) }}" class="hover:text-ink">{{ $dienst['title'] }}</a>
                     </li>
                 @endforeach
             </ul>

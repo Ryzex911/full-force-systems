@@ -33,7 +33,7 @@ class ServicesPageTest extends TestCase
             'Voor bedrijven',
             'In vier stappen geregeld',
         ]);
-        $response->assertSee('href="'.route('home').'#pakketten"', false);
+        $response->assertSee('href="'.route('pakketten').'"', false);
         $response->assertSee('id="offerte"', false);
     }
 
@@ -52,7 +52,7 @@ class ServicesPageTest extends TestCase
         $response->assertSee('href="'.route('diensten').'"', false);
 
         foreach (config('site.services') as $service) {
-            $response->assertSee('href="'.route('diensten').'#'.$service['slug'].'"', false);
+            $response->assertSee('href="'.route('diensten.show', $service['slug']).'"', false);
         }
     }
 }

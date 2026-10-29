@@ -10,21 +10,28 @@ use Tests\TestCase;
  *  - elke interne link geeft een werkende pagina (status 200);
  *  - een link met #anker springt naar een blok dat echt op die pagina staat (id="anker").
  *
- * Nieuwe pagina gemaakt? Zet de routenaam in $pages hieronder.
+ * Nieuwe pagina gemaakt? Zet de routenaam in $pages hieronder (of, met een parameter, in urls()).
  */
 class LinksTest extends TestCase
 {
     /** @var array<int, string> routenamen van alle pagina's die een bezoeker kan openen */
-    private array $pages = ['home', 'diensten', 'over-ons', 'contact'];
+    private array $pages = ['home', 'diensten', 'pakketten', 'webshop', 'over-ons', 'contact'];
 
     /** @var array<string, string> eerder opgehaalde pagina's (url → html), zodat we elke pagina maar één keer laden */
     private array $cache = [];
 
+    /** @return array<int, string> alle pagina's: de routes uit $pages plus elke detailpagina van een dienst */
+    private function urls(): array
+    {
+        return [
+            ...array_map(fn (string $page) => route($page), $this->pages),
+            ...array_map(fn (array $service) => route('diensten.show', $service['slug']), config('site.services')),
+        ];
+    }
+
     public function test_every_link_on_every_page_works(): void
     {
-        foreach ($this->pages as $page) {
-            $url = route($page);
-
+        foreach ($this->urls() as $url) {
             foreach ($this->links($this->html($url)) as $href) {
                 $this->assertNotSame('', trim($href), "Lege link op {$url}");
                 $this->assertNotSame('#', $href, "Dode link (#) op {$url}");

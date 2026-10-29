@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\Catalog;
 use App\Support\Nav;
 use Illuminate\View\View;
 
@@ -22,6 +23,20 @@ class ServiceController extends Controller
     }
 
     /**
+     * Toon de detailpagina van één dienst (ontwerp: docs/ontwerp/03-dienst-detail.png).
+     * Eén pagina voor alle vijf diensten; de inhoud komt uit config('site.services'). Onbekende dienst → 404.
+     */
+    public function show(string $slug): View
+    {
+        $service = collect(config('site.services'))->firstWhere('slug', $slug) ?? abort(404);
+
+        return view('pages.dienst', [
+            'service' => $service,
+            'products' => Catalog::productsBySlug($service['products']),
+        ]);
+    }
+
+    /**
      * De twee doelgroepen met hun hoofdactie uit het wensenformulier:
      * particulier → "Pakket bekijken", zakelijk → "Offerte aanvragen".
      */
@@ -34,7 +49,7 @@ class ServiceController extends Controller
                 'text' => 'Kies een kant-en-klaar pakket met vaste prijs, of bestel losse producten in de webshop.',
                 'points' => ['Vaste prijs inclusief installatie', 'Pakket aan te passen', 'Betalen met iDEAL of bankoverschrijving'],
                 'button' => 'Pakket bekijken',
-                'href' => route('home').'#pakketten',
+                'href' => route('pakketten'),
                 'variant' => 'primary',
             ],
             [
