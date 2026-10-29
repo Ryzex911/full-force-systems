@@ -28,13 +28,12 @@ class HomePageTest extends TestCase
     {
         $response = $this->get(route('home'));
 
-        foreach (['webshop', 'projecten'] as $anchor) {
-            $response->assertSee('href="'.route('home').'#'.$anchor.'"', false);
-            $response->assertSee('id="'.$anchor.'"', false);
-        }
+        // Projecten heeft nog geen eigen pagina: die link springt naar het blok op de homepage
+        $response->assertSee('href="'.route('home').'#projecten"', false);
+        $response->assertSee('id="projecten"', false);
 
         // Pagina's die al bestaan krijgen een gewone link
-        foreach (['diensten', 'pakketten', 'over-ons', 'contact'] as $page) {
+        foreach (['diensten', 'pakketten', 'webshop', 'over-ons', 'contact'] as $page) {
             $response->assertSee('href="'.route($page).'"', false);
         }
     }

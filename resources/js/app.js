@@ -3,6 +3,7 @@
  |  1. Wisselen tussen donker en licht thema
  |  2. Mobiel menu openen en sluiten (ook met Escape)
  |  3. Keuze particulier / zakelijk onthouden en overal gelijk houden
+ |  4. Webshopfilters direct toepassen
  */
 
 /** Lees een waarde uit localStorage. Geeft null terug als opslag niet beschikbaar is. */
@@ -107,3 +108,28 @@ if (vasteKeuze) {
 } else {
     kiesKlanttype(lees('ffs-klanttype') || 'particulier');
 }
+
+// 4. Webshopfilters ----------------------------------------------------------
+// Een formulier met data-auto-filter (de webshop) wordt meteen verstuurd als je een vinkje, de sortering of
+// een prijs verandert. Zoeken gaat met Enter. Zonder JavaScript werkt alles ook, met de knop "Filters toepassen";
+// die knop (data-zonder-js) verbergen we hier, omdat hij met JavaScript niet nodig is.
+document.querySelectorAll('form[data-auto-filter]').forEach((formulier) => {
+    formulier.querySelectorAll('[data-zonder-js]').forEach((element) => {
+        element.hidden = true;
+    });
+
+    formulier.addEventListener('change', (event) => {
+        if (event.target.matches('select, input[type="checkbox"], input[type="number"]')) {
+            formulier.requestSubmit();
+        }
+    });
+
+    // Lege velden niet meesturen, zodat de url kort en leesbaar blijft (/webshop?zoek=camera in plaats van ...&prijs_van=&prijs_tot=).
+    formulier.addEventListener('formdata', (event) => {
+        for (const [naam, waarde] of [...event.formData.entries()]) {
+            if (waarde === '') {
+                event.formData.delete(naam);
+            }
+        }
+    });
+});
