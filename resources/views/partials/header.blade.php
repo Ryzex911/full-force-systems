@@ -39,7 +39,7 @@
                 <ul class="flex items-center gap-6 xl:gap-8">
                     @foreach (config('site.nav') as $item)
                         @php
-                            $actief = $item['route'] && request()->routeIs($item['route']);
+                            $actief = $item['route'] && request()->routeIs($item['route'], $item['route'].'.*'); // ook actief op onderliggende pagina's, zoals diensten.show
                         @endphp
                         <li>
                             <a
@@ -99,7 +99,7 @@
         <nav class="wrap flex flex-col gap-1 py-4" aria-label="Mobiele navigatie">
             @foreach (config('site.nav') as $item)
                 @php
-                    $actief = $item['route'] && request()->routeIs($item['route']);
+                    $actief = $item['route'] && request()->routeIs($item['route'], $item['route'].'.*'); // ook actief op onderliggende pagina's, zoals diensten.show
                 @endphp
                 <a
                     href="{{ Nav::href($item) }}"

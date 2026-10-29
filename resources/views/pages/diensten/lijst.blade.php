@@ -1,9 +1,8 @@
 {{--
     Alle diensten onder elkaar ($services uit ServiceController).
     Elke dienst heeft een eigen id (de slug), zodat je er direct naartoe kunt linken: /diensten#camerabewaking
+    "Meer informatie" gaat naar de detailpagina: /diensten/camerabewaking
 --}}
-@use('App\Support\Nav')
-
 <section class="py-12 lg:py-24" aria-label="Onze diensten">
     <div class="wrap flex flex-col gap-6">
         @foreach ($services as $dienst)
@@ -39,8 +38,8 @@
                         </div>
                     </dl>
 
-                    {{-- Naar het offerteformulier met deze dienst al ingevuld --}}
-                    <x-button :href="Nav::quote(['dienst' => $dienst['slug']])" class="mt-auto w-full" aria-label="Offerte aanvragen: {{ strtolower($dienst['title']) }}">Offerte aanvragen</x-button>
+                    {{-- Naar de detailpagina van deze dienst --}}
+                    <x-button :href="route('diensten.show', $dienst['slug'])" class="mt-auto w-full" aria-label="Meer informatie over {{ strtolower($dienst['title']) }}">Meer informatie</x-button>
                 </div>
             </article>
         @endforeach

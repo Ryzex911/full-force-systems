@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\Catalog;
 use App\Support\Nav;
 use Illuminate\View\View;
 
@@ -18,6 +19,20 @@ class ServiceController extends Controller
         return view('pages.diensten', [
             'services' => config('site.services'),
             'audiences' => $this->audiences(),
+        ]);
+    }
+
+    /**
+     * Toon de detailpagina van één dienst (ontwerp: docs/ontwerp/03-dienst-detail.png).
+     * Eén pagina voor alle vijf diensten; de inhoud komt uit config('site.services'). Onbekende dienst → 404.
+     */
+    public function show(string $slug): View
+    {
+        $service = collect(config('site.services'))->firstWhere('slug', $slug) ?? abort(404);
+
+        return view('pages.dienst', [
+            'service' => $service,
+            'products' => Catalog::productsBySlug($service['products']),
         ]);
     }
 

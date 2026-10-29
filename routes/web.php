@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/diensten', [ServiceController::class, 'index'])->name('diensten');
+Route::get('/diensten/{slug}', [ServiceController::class, 'show'])->name('diensten.show');
 Route::get('/pakketten', PackageController::class)->name('pakketten');
 Route::get('/webshop', [WebshopController::class, 'index'])->name('webshop');
 Route::get('/over-ons', AboutController::class)->name('over-ons');

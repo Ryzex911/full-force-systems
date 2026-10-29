@@ -52,7 +52,7 @@ class ServicesPageTest extends TestCase
         $response->assertSee('href="'.route('diensten').'"', false);
 
         foreach (config('site.services') as $service) {
-            $response->assertSee('href="'.route('diensten').'#'.$service['slug'].'"', false);
+            $response->assertSee('href="'.route('diensten.show', $service['slug']).'"', false);
         }
     }
 }
