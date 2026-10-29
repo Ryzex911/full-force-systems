@@ -19,7 +19,7 @@ Het bedrijf verkoopt en installeert beveiligingstechniek: camerabewaking, alarms
 **Alleen de front-end en opmaak.** Database, accounts, winkelmand, betalingen en adminpanel komen later.
 Bouw pagina's dus met voorbeelddata in de controller, niet met modellen of migraties, tenzij daar expliciet om gevraagd wordt.
 
-### Stand van zaken (09-10-2026)
+### Stand van zaken (29-10-2026)
 
 - Ontwerp is klaar in Figma: 11 pagina's in donker en licht.
 - Branch `feature/homepage` staat op GitHub en bevat: huisstijl, basislayout, componenten en de homepage.
@@ -34,14 +34,26 @@ Bouw pagina's dus met voorbeelddata in de controller, niet met modellen of migra
 - **Alles is verbonden.** Elke "Offerte aanvragen" gaat naar het formulier, met de gekozen dienst, het pakket of het product al ingevuld (`/contact?dienst=...`, `?pakket=...`, `?product=...`, `?klant=zakelijk`). De keuze particulier/zakelijk is overal gelijk: header, hero, "Voor wie" en het formulier.
 - **Geen dode links meer.** Links naar pagina's die nog niet bestaan (webshop, projecten, zoeken, account, winkelwagen, juridische pagina's) zijn verborgen en verschijnen vanzelf zodra de route bestaat (zie `Nav::page`). `tests/Feature/LinksTest.php` volgt elke link op elke pagina en faalt bij een dode link of een anker dat niet bestaat.
 - Afwerking: eigen foutpagina's (404, 419 verlopen formulier, 429 te vaak verstuurd), favicon en iPhone-icoon (tijdelijk "FF"), meta-tags voor delen op sociale media, mobiel menu sluit met Escape.
-- **Bewust afgeweken van Figma** (nog bespreken met Tawfik): de knop op een pakketkaart heet "Pakket aanvragen" en op een productkaart "Product aanvragen" (de webshop bestaat nog niet), en zoeken/account/winkelwagen staan pas in de header als die pagina's er zijn. De pagina's Over ons en Contact zijn gebouwd zonder Figma (de Figma-koppeling had haar limiet bereikt); vergelijk ze nog met het ontwerp.
+- Branch `feature/pakketten-webshop` (gebaseerd op `feature/diensten`, nog niet gepusht) bevat drie nieuwe pagina's volgens de ontwerpen in `docs/ontwerp/`, gebouwd met het stappenplan `docs/opdracht-pakketten-webshop-dienstdetail.md`. Alle drie getest in echt Laravel (donker, licht, 1440 en 390 px):
+  - **Pakketten** (`/pakketten`, ontwerp 04): drie pakketkaarten ("Pakket kiezen" → offerteformulier met het pakket ingevuld), vergelijkingstabel, zakelijk-blok en werkwijze.
+  - **Webshop** (`/webshop`, ontwerp 05): filters (categorie, prijs, op voorraad, aanbiedingen), zoeken, sorteren en paginering (9 per pagina). Filteren werkt met een GET-formulier op de voorbeelddata, met en zonder JavaScript.
+  - **Dienst detail** (`/diensten/{slug}`, ontwerp 03): één pagina voor alle vijf diensten. Teksten van Camerabewaking komen uit het ontwerp; die van de andere vier zijn **voorbeeldtekst** en moeten nog door de opdrachtgever worden nagelezen.
+- Pakketten en producten staan nu op één plek: `App\Support\Catalog` (9 voorbeeldproducten over de zes webshopcategorieën).
+- **Bewust afgeweken van Figma** (nog bespreken met Tawfik):
+  - Productkaarten tonen "Product aanvragen" (naar het offerteformulier) in plaats van "In winkelwagen", tot de winkelwagen er is.
+  - Zoeken, account en winkelwagen staan pas in de header als die pagina's er zijn.
+  - De webshop toont paginering pas bij meer dan 9 producten. Met de 9 voorbeeldproducten is er één pagina, dus geen knoppen 1, 2, 3.
+  - "Alleen op voorraad" staat niet standaard aangevinkt.
+  - Op de dienstenpagina heet de knop bij elke dienst nu "Meer informatie" (naar de detailpagina).
+  - Over ons en Contact zijn gebouwd zonder Figma; vergelijk ze nog met het ontwerp.
 
 ### Volgende stappen, in deze volgorde
 
 1. Over ons en Contact naast het Figma-ontwerp leggen en waar nodig aanpassen.
-2. Overige pagina's bouwen volgens het Figma-ontwerp: Dienst detail, Pakketten, Webshop, Productdetail, Projecten, Inloggen/registreren, Mijn account.
+2. Overige pagina's bouwen volgens het Figma-ontwerp: Productdetail, Projecten, Inloggen/registreren, Mijn account. (Tawfik werkt op de branch `Authenticatie-bouwen`.)
 3. Per nieuwe pagina: route met naam toevoegen in `routes/web.php`, die naam invullen bij `'route'` in `config/site.php` (`nav`) als de pagina in het menu staat, en de routenaam toevoegen aan `$pages` in `tests/Feature/LinksTest.php`.
-   Gebruik voor de routenamen deze namen, dan verschijnen de verborgen links vanzelf: `pakketten`, `webshop`, `projecten`, `zoeken`, `account`, `winkelwagen`, `privacy`, `voorwaarden`, `cookies`, `retourneren`.
+   Gebruik voor de routenamen deze namen, dan verschijnen de verborgen links vanzelf: `projecten`, `zoeken`, `account`, `winkelwagen`, `privacy`, `voorwaarden`, `cookies`, `retourneren`.
+4. Productdetail: geef `x-product-card` dan een `href` mee (de productpagina); foto en titel worden vanzelf een link.
 
 ## Techniek
 
@@ -72,8 +84,12 @@ En in een tweede terminal: `php artisan serve` → http://localhost:8000
 |---|---|
 | Kleuren (donker/licht), tekststijlen, `.wrap`, `.card`, `.icon-tile` | `resources/css/app.css` |
 | Bedrijfsgegevens, menu, diensten, werkwijze | `config/site.php` → `config('site.phone')` |
-| Voorbeelddata homepage | `app/Http/Controllers/HomeController.php` |
-| Pagina Diensten (gegevens voor "Voor wie") | `app/Http/Controllers/ServiceController.php` |
+| Voorbeelddata homepage (sterke punten, projecten) | `app/Http/Controllers/HomeController.php` |
+| VOORBEELD pakketten, vergelijkingstabel, webshopcategorieën en producten | `app/Support/Catalog.php` |
+| Pagina Diensten en de detailpagina per dienst | `app/Http/Controllers/ServiceController.php` (`index`, `show`), `pages/diensten/`, `pages/dienst/` |
+| Teksten van de detailpagina's (intro, wat u krijgt, vragen, producten) | `config/site.php` → `services` |
+| Pagina Pakketten | `app/Http/Controllers/PackageController.php`, `pages/pakketten/` |
+| Pagina Webshop: filteren, sorteren, paginering | `app/Http/Controllers/WebshopController.php`, `pages/webshop/`, `partials/paginering.blade.php` |
 | Pagina Over ons (teksten uit het wensenformulier) | `app/Http/Controllers/AboutController.php`, `pages/over-ons/` |
 | Pagina Contact en offerte: tonen en versturen | `app/Http/Controllers/ContactController.php`, `pages/contact/` |
 | Controle en foutmeldingen van het offerteformulier | `app/Http/Requests/QuoteRequest.php` |
@@ -86,18 +102,20 @@ En in een tweede terminal: `php artisan serve` → http://localhost:8000
 | Partnerblok (home: 6, Over ons: alle 11) | `resources/views/partials/partners.blade.php`, lijst in `config('site.partners')` |
 | Homepage, één bestand per sectie | `resources/views/pages/home.blade.php` en `pages/home/` |
 | Pagina Diensten, één bestand per sectie | `resources/views/pages/diensten.blade.php` en `pages/diensten/` |
-| Themaknop, mobiel menu, particulier/zakelijk | `resources/js/app.js` |
+| Themaknop, mobiel menu, particulier/zakelijk, webshopfilters direct toepassen | `resources/js/app.js` |
+| Ontwerpen en stappenplan voor Pakketten, Webshop en Dienst detail | `docs/ontwerp/`, `docs/opdracht-pakketten-webshop-dienstdetail.md` |
 | Links: menu-item (`Nav::href`), pagina die misschien nog niet bestaat (`Nav::page`), offerteformulier met ingevulde keuze (`Nav::quote`) | `app/Support/Nav.php` |
 | Tijdelijke foto's (Unsplash, lokaal opgeslagen) | `public/images/voorbeeld/` |
-| Tests per pagina, en een test die alle links volgt | `tests/Feature/` (`HomePageTest`, `ServicesPageTest`, `AboutPageTest`, `ContactPageTest`, `LinksTest`) |
+| Tests per pagina, en een test die alle links volgt | `tests/Feature/` (`HomePageTest`, `ServicesPageTest`, `ServiceDetailPageTest`, `PackagesPageTest`, `WebshopPageTest`, `AboutPageTest`, `ContactPageTest`, `LinksTest`) |
 
 ### Afspraken
 
 - **Nieuwe pagina:** `@extends('layouts.app')`, inhoud in `@section('content')`, bestand in `resources/views/pages/`. Grote pagina's opsplitsen in secties in een eigen map, zoals bij home.
-- **Vervolgpagina's beginnen met `x-page-header`** (kruimelpad, titel, korte tekst). De titel staat tussen de tags, zodat `&shy;` werkt. Blokken die op meer pagina's terugkomen staan in `partials/`: `@include('partials.werkwijze')` en `@include('partials.cta')`.
+- **Vervolgpagina's beginnen met `x-page-header`** (kruimelpad, titel, korte tekst). De titel staat tussen de tags, zodat `&shy;` werkt. Knoppen en een foto rechts kunnen met `<x-slot:actions>` en `<x-slot:media>` (zie `pages/dienst.blade.php`). Blokken die op meer pagina's terugkomen staan in `partials/`: `@include('partials.werkwijze')` en `@include('partials.cta')`. Het CTA-blok kan een andere titel, tekst of foto krijgen met `ctaTitel`, `ctaTekst`, `ctaFoto` en `ctaOfferte` (zie `pages/pakketten.blade.php`).
+- **Sr-only tekst in een scrollblok of knop:** zet `relative` op het blok eromheen. Anders ontsnapt de onzichtbare tekst en wordt de pagina op mobiel breder (gebeurde bij de vergelijkingstabel).
 - **Hergebruik de componenten.** Maak geen tweede soort knop of kaart; breid de bestaande uit als er iets ontbreekt.
 - **Geen dode links.** Nooit `href="#"`. Link naar een bestaande route; voor een pagina die er nog niet is: `@if ($link = Nav::page('webshop'))`. "Offerte aanvragen" altijd met `Nav::quote()`, eventueel met een keuze: `Nav::quote(['dienst' => 'camerabewaking'])`. `LinksTest` controleert dit.
-- **Formulieren:** velden met `x-field`, verzendknop met `<x-button type="submit">`, controle in een Form Request met Nederlandse meldingen (zie `QuoteRequest`).
+- **Formulieren:** velden met `x-field`, verzendknop met `<x-button type="submit">`, controle in een Form Request met Nederlandse meldingen (zie `QuoteRequest`). Voor filters: `x-field size="sm"`, eventueel met `icon`, `:hide-label="true"` en `:mark-optional="false"` (zie `pages/webshop/`).
 - **Kleuren alleen via de tokens**, nooit losse hex-codes in Blade: `bg-page`, `bg-alt`, `bg-surface`, `bg-surface-2`, `border-line`, `text-ink`, `text-ink-2`, `text-ink-3`, `bg-brand`, `text-brand-ink`, `bg-brand-soft`, `text-ok`, `bg-night`. Daardoor werkt het lichte thema vanzelf.
 - **Tekststijlen via de classes** `text-display`, `text-h1` t/m `text-h4`, `text-body-lg`, `text-body`, `text-body-sm`, `text-label`, `text-caption`.
 - **Thema:** `data-theme="dark"` of `"light"` op `<html>`. Donker is standaard. Voor uitzonderingen in licht bestaat de variant `light:` (bijv. `light:hidden`).
@@ -140,8 +158,9 @@ En in een tweede terminal: `php artisan serve` → http://localhost:8000
 
 Vervang dit zodra de opdrachtgever het aanlevert, en laat het tot die tijd herkenbaar als voorbeeld:
 
-- Pakketten Basis/Plus/Compleet met prijzen en inhoud
-- Productnamen, prijzen en specificaties
+- Pakketten Basis/Plus/Compleet met prijzen, inhoud en de vergelijkingstabel (`App\Support\Catalog`)
+- De 9 producten: namen, prijzen, voorraad en specificaties (`App\Support\Catalog`)
+- Teksten van de detailpagina's van Alarmsystemen, Toegangscontrole, Video-intercom en Onderhoud & service (`'example' => true` in `config/site.php`)
 - Twee van de drie projecten ("Winkelpand (voorbeeld)", "Woonhuis (voorbeeld)")
 - Het logo (nu een rood blokje "FF" in `x-logo`)
 - Foto's: tijdelijke Unsplash-foto's in `public/images/voorbeeld/`; later eigen foto's van de opdrachtgever. Let op: bij "Tax administraties" staat nu een stockfoto, geen foto van het echte project
