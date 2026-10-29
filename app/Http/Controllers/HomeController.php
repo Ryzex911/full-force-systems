@@ -17,10 +17,9 @@ class HomeController extends Controller
         return view('pages.home', [
             'usps' => $this->usps(),
             'packages' => $this->packages(),
-            'steps' => $this->steps(),
             'projects' => $this->projects(),
             'products' => $this->products(),
-            'partners' => ['Full Force Security', 'PNBS Security', 'Parabellen', 'Resecure', 'EMB Security', 'TaskTime'],
+            'partners' => array_slice(config('site.partners'), 0, 6),
         ]);
     }
 
@@ -60,17 +59,6 @@ class HomeController extends Controller
                 'features' => ["4 buitencamera's", 'Alarmsysteem met sensoren', 'Video-intercom', 'Installatie en uitleg'],
                 'featured' => false,
             ],
-        ];
-    }
-
-    /** Werkwijze uit het wensenformulier: voorstel, akkoord, afspraak, installatie. */
-    private function steps(): array
-    {
-        return [
-            ['title' => 'Voorstel', 'text' => 'U vertelt wat u wilt beveiligen. Wij adviseren en sturen een duidelijk voorstel met prijs.'],
-            ['title' => 'Akkoord', 'text' => 'Past het voorstel? Dan bevestigt u en leggen we alles vast.'],
-            ['title' => 'Afspraak', 'text' => 'We plannen de installatie op een moment dat u uitkomt.'],
-            ['title' => 'Installatie', 'text' => 'Wij monteren, stellen af en leggen uit hoe alles werkt.'],
         ];
     }
 

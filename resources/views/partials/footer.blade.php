@@ -35,7 +35,7 @@
             <ul class="text-body-sm flex flex-col gap-3.5 text-ink-2">
                 @foreach (config('site.services') as $dienst)
                     <li>
-                        <a href="#" class="hover:text-ink">{{ $dienst['title'] }}</a>
+                        <a href="{{ route('diensten') }}#{{ $dienst['slug'] }}" class="hover:text-ink">{{ $dienst['title'] }}</a>
                     </li>
                 @endforeach
             </ul>
@@ -59,12 +59,26 @@
         <div class="wrap text-body-sm flex flex-col gap-3 py-5 text-ink-3 lg:flex-row lg:items-center lg:justify-between">
             <p>© {{ date('Y') }} {{ config('site.name') }} — handelsnaam van {{ config('site.legal_name') }}</p>
 
-            <ul class="flex flex-wrap gap-x-5 gap-y-2">
-                <li><a href="#" class="hover:text-ink">Privacyverklaring</a></li>
-                <li><a href="#" class="hover:text-ink">Algemene voorwaarden</a></li>
-                <li><a href="#" class="hover:text-ink">Cookiebeleid</a></li>
-                <li><a href="#" class="hover:text-ink">Retourneren</a></li>
-            </ul>
+            {{--
+                Juridische pagina's: de teksten moeten nog van de opdrachtgever komen (wensenformulier, vraag 18).
+                Een link verschijnt vanzelf zodra de route bestaat, bijvoorbeeld Route::view('/privacy', ...)->name('privacy').
+            --}}
+            @php
+                $juridisch = collect([
+                    'privacy' => 'Privacyverklaring',
+                    'voorwaarden' => 'Algemene voorwaarden',
+                    'cookies' => 'Cookiebeleid',
+                    'retourneren' => 'Retourneren',
+                ])->filter(fn ($label, $route) => Nav::page($route));
+            @endphp
+
+            @if ($juridisch->isNotEmpty())
+                <ul class="flex flex-wrap gap-x-5 gap-y-2">
+                    @foreach ($juridisch as $route => $label)
+                        <li><a href="{{ Nav::page($route) }}" class="hover:text-ink">{{ $label }}</a></li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
     </div>
 </footer>

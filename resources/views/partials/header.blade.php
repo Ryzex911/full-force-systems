@@ -58,15 +58,22 @@
             </nav>
 
             <div class="flex items-center gap-1 sm:gap-2">
-                <a href="#" class="hidden size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2 sm:flex" aria-label="Zoeken">
-                    <x-icon name="search" class="size-[22px]" />
-                </a>
-                <a href="#" class="flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Mijn account">
-                    <x-icon name="user" class="size-[22px]" />
-                </a>
-                <a href="#" class="flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Winkelwagen">
-                    <x-icon name="cart" class="size-[22px]" />
-                </a>
+                {{-- Zoeken, account en winkelwagen verschijnen vanzelf zodra de route bestaat (zie Nav::page) --}}
+                @if ($link = Nav::page('zoeken'))
+                    <a href="{{ $link }}" class="hidden size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2 sm:flex" aria-label="Zoeken">
+                        <x-icon name="search" class="size-[22px]" />
+                    </a>
+                @endif
+                @if ($link = Nav::page('account'))
+                    <a href="{{ $link }}" class="flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Mijn account">
+                        <x-icon name="user" class="size-[22px]" />
+                    </a>
+                @endif
+                @if ($link = Nav::page('winkelwagen'))
+                    <a href="{{ $link }}" class="flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Winkelwagen">
+                        <x-icon name="cart" class="size-[22px]" />
+                    </a>
+                @endif
 
                 {{-- Wissel tussen donker en licht --}}
                 <button type="button" data-thema-knop class="flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Wissel tussen donker en licht thema">
@@ -75,7 +82,7 @@
                 </button>
 
                 <div class="ml-2 hidden xl:block">
-                    <x-button href="#offerte">Offerte aanvragen</x-button>
+                    <x-button :href="Nav::quote()">Offerte aanvragen</x-button>
                 </div>
 
                 {{-- Menuknop voor mobiel: toont een kruisje zolang het menu open is (aria-expanded="true") --}}
@@ -107,7 +114,7 @@
                 <div class="md:hidden">
                     @include('partials.klanttype-keuze')
                 </div>
-                <x-button href="#offerte" class="w-full">Offerte aanvragen</x-button>
+                <x-button :href="Nav::quote()" class="w-full">Offerte aanvragen</x-button>
                 <a href="{{ config('site.phone_href') }}" class="text-body-sm flex items-center gap-2 text-ink-2">
                     <x-icon name="phone" class="size-4 text-ink-3" />
                     {{ config('site.phone') }} · {{ config('site.hours') }}

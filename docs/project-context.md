@@ -25,13 +25,23 @@ Bouw pagina's dus met voorbeelddata in de controller, niet met modellen of migra
 - Branch `feature/homepage` staat op GitHub en bevat: huisstijl, basislayout, componenten en de homepage.
 - De homepage draait nu bij Tamzid in echt Laravel (PHP 8.4.26 in Laragon) en is nagelopen in donker en licht, op 1440 px en 390 px: geen horizontaal scrollen, geen kapotte afbeeldingen, geen JavaScript-fouten, lettertype Inter laadt, tests slagen.
 - Hersteld bij die controle: `composer.json` vraagt nu PHP `^8.4` (gelijk aan `composer.lock`), `.env.example` heeft de naam Full Force Systems en taal `nl`, de mobiele menuknop toont een kruisje als het menu open is, en `color-scheme` volgt het thema.
-- Homepage afgemaakt: foto's staan lokaal in `public/images/voorbeeld/` (de Unsplash-links laadden niet overal), menu-items springen naar het juiste blok op de homepage tot hun eigen pagina bestaat, de keuze particulier/zakelijk wisselt de hoofdknop in de hero, en "Offerte aanvragen" onderaan opent tijdelijk een e-mail.
-- Wat op de homepage nog bewust niets doet (komt met latere pagina's of de database): "Meer informatie", "Alle projecten", "Naar de webshop", productkaarten, "In winkelwagen", zoeken, account, winkelwagen, "Over ons" en de juridische links.
+- Homepage afgemaakt: foto's staan lokaal in `public/images/voorbeeld/` (de Unsplash-links laadden niet overal), menu-items springen naar het juiste blok op de homepage tot hun eigen pagina bestaat, en de keuze particulier/zakelijk wisselt de hoofdknop in de hero.
+- Branch `feature/diensten` (gebaseerd op `feature/homepage`) bevat vier pagina's, alle getest in echt Laravel (donker, licht, 1440 en 390 px):
+  - **Home** (`/`)
+  - **Diensten** (`/diensten`): de vijf diensten, "Voor wie", werkwijze en offerteblok. Elke dienst heeft een anker (`/diensten#camerabewaking`).
+  - **Over ons** (`/over-ons`): verhaal, missie, sterke punten, werkgebied en alle 11 partners, met teksten uit het wensenformulier. Geen medewerkers en geen reviews.
+  - **Contact en offerte** (`/contact`): werkend offerteformulier met de velden uit het wensenformulier, Nederlandse foutmeldingen en een spamfilter. Na versturen gaat er een e-mail naar info@fullforcesystems.nl (met "Beantwoorden" direct naar de klant) en een automatische bevestiging naar de klant. Lokaal (`MAIL_MAILER=log`) komen de mails in `storage/logs/laravel.log`.
+- **Alles is verbonden.** Elke "Offerte aanvragen" gaat naar het formulier, met de gekozen dienst, het pakket of het product al ingevuld (`/contact?dienst=...`, `?pakket=...`, `?product=...`, `?klant=zakelijk`). De keuze particulier/zakelijk is overal gelijk: header, hero, "Voor wie" en het formulier.
+- **Geen dode links meer.** Links naar pagina's die nog niet bestaan (webshop, projecten, zoeken, account, winkelwagen, juridische pagina's) zijn verborgen en verschijnen vanzelf zodra de route bestaat (zie `Nav::page`). `tests/Feature/LinksTest.php` volgt elke link op elke pagina en faalt bij een dode link of een anker dat niet bestaat.
+- Afwerking: eigen foutpagina's (404, 419 verlopen formulier, 429 te vaak verstuurd), favicon en iPhone-icoon (tijdelijk "FF"), meta-tags voor delen op sociale media, mobiel menu sluit met Escape.
+- **Bewust afgeweken van Figma** (nog bespreken met Tawfik): de knop op een pakketkaart heet "Pakket aanvragen" en op een productkaart "Product aanvragen" (de webshop bestaat nog niet), en zoeken/account/winkelwagen staan pas in de header als die pagina's er zijn. De pagina's Over ons en Contact zijn gebouwd zonder Figma (de Figma-koppeling had haar limiet bereikt); vergelijk ze nog met het ontwerp.
 
 ### Volgende stappen, in deze volgorde
 
-1. Overige pagina's bouwen volgens het Figma-ontwerp: Diensten, Dienst detail, Pakketten, Webshop, Productdetail, Projecten, Over ons, Contact en offerte, Inloggen/registreren, Mijn account.
-2. Per nieuwe pagina: route met naam toevoegen in `routes/web.php` en die naam invullen bij `'route'` in `config/site.php` (`nav`), zodat het menu ernaar linkt.
+1. Over ons en Contact naast het Figma-ontwerp leggen en waar nodig aanpassen.
+2. Overige pagina's bouwen volgens het Figma-ontwerp: Dienst detail, Pakketten, Webshop, Productdetail, Projecten, Inloggen/registreren, Mijn account.
+3. Per nieuwe pagina: route met naam toevoegen in `routes/web.php`, die naam invullen bij `'route'` in `config/site.php` (`nav`) als de pagina in het menu staat, en de routenaam toevoegen aan `$pages` in `tests/Feature/LinksTest.php`.
+   Gebruik voor de routenamen deze namen, dan verschijnen de verborgen links vanzelf: `pakketten`, `webshop`, `projecten`, `zoeken`, `account`, `winkelwagen`, `privacy`, `voorwaarden`, `cookies`, `retourneren`.
 
 ## Techniek
 
@@ -61,21 +71,33 @@ En in een tweede terminal: `php artisan serve` → http://localhost:8000
 | Wat | Waar |
 |---|---|
 | Kleuren (donker/licht), tekststijlen, `.wrap`, `.card`, `.icon-tile` | `resources/css/app.css` |
-| Bedrijfsgegevens, menu, diensten | `config/site.php` → `config('site.phone')` |
+| Bedrijfsgegevens, menu, diensten, werkwijze | `config/site.php` → `config('site.phone')` |
 | Voorbeelddata homepage | `app/Http/Controllers/HomeController.php` |
+| Pagina Diensten (gegevens voor "Voor wie") | `app/Http/Controllers/ServiceController.php` |
+| Pagina Over ons (teksten uit het wensenformulier) | `app/Http/Controllers/AboutController.php`, `pages/over-ons/` |
+| Pagina Contact en offerte: tonen en versturen | `app/Http/Controllers/ContactController.php`, `pages/contact/` |
+| Controle en foutmeldingen van het offerteformulier | `app/Http/Requests/QuoteRequest.php` |
+| E-mails bij een offerteaanvraag | `app/Mail/QuoteRequested.php` (naar bedrijf), `app/Mail/QuoteReceived.php` (bevestiging), `resources/views/mail/offerte/` |
+| Foutpagina's 404, 419, 429 | `resources/views/errors/` |
+| Favicon en iPhone-icoon (tijdelijk) | `public/favicon.svg`, `public/apple-touch-icon.png` |
 | Hoofdlayout | `resources/views/layouts/app.blade.php` |
-| Header, footer, CTA-blok, keuze particulier/zakelijk | `resources/views/partials/` |
-| Componenten: `x-button`, `x-icon`, `x-logo`, `x-section-heading`, `x-service-card`, `x-product-card`, `x-project-card`, `x-package-card` | `resources/views/components/` |
+| Header, footer, CTA-blok, werkwijze, keuze particulier/zakelijk | `resources/views/partials/` |
+| Componenten: `x-button`, `x-icon`, `x-logo`, `x-section-heading`, `x-page-header`, `x-check-list`, `x-field` (formulierveld), `x-service-card`, `x-product-card`, `x-project-card`, `x-package-card` | `resources/views/components/` |
+| Partnerblok (home: 6, Over ons: alle 11) | `resources/views/partials/partners.blade.php`, lijst in `config('site.partners')` |
 | Homepage, één bestand per sectie | `resources/views/pages/home.blade.php` en `pages/home/` |
+| Pagina Diensten, één bestand per sectie | `resources/views/pages/diensten.blade.php` en `pages/diensten/` |
 | Themaknop, mobiel menu, particulier/zakelijk | `resources/js/app.js` |
-| Link van een menu-item (route → blok op home → `#`) | `app/Support/Nav.php` |
+| Links: menu-item (`Nav::href`), pagina die misschien nog niet bestaat (`Nav::page`), offerteformulier met ingevulde keuze (`Nav::quote`) | `app/Support/Nav.php` |
 | Tijdelijke foto's (Unsplash, lokaal opgeslagen) | `public/images/voorbeeld/` |
-| Tests voor de homepage | `tests/Feature/HomePageTest.php` |
+| Tests per pagina, en een test die alle links volgt | `tests/Feature/` (`HomePageTest`, `ServicesPageTest`, `AboutPageTest`, `ContactPageTest`, `LinksTest`) |
 
 ### Afspraken
 
 - **Nieuwe pagina:** `@extends('layouts.app')`, inhoud in `@section('content')`, bestand in `resources/views/pages/`. Grote pagina's opsplitsen in secties in een eigen map, zoals bij home.
+- **Vervolgpagina's beginnen met `x-page-header`** (kruimelpad, titel, korte tekst). De titel staat tussen de tags, zodat `&shy;` werkt. Blokken die op meer pagina's terugkomen staan in `partials/`: `@include('partials.werkwijze')` en `@include('partials.cta')`.
 - **Hergebruik de componenten.** Maak geen tweede soort knop of kaart; breid de bestaande uit als er iets ontbreekt.
+- **Geen dode links.** Nooit `href="#"`. Link naar een bestaande route; voor een pagina die er nog niet is: `@if ($link = Nav::page('webshop'))`. "Offerte aanvragen" altijd met `Nav::quote()`, eventueel met een keuze: `Nav::quote(['dienst' => 'camerabewaking'])`. `LinksTest` controleert dit.
+- **Formulieren:** velden met `x-field`, verzendknop met `<x-button type="submit">`, controle in een Form Request met Nederlandse meldingen (zie `QuoteRequest`).
 - **Kleuren alleen via de tokens**, nooit losse hex-codes in Blade: `bg-page`, `bg-alt`, `bg-surface`, `bg-surface-2`, `border-line`, `text-ink`, `text-ink-2`, `text-ink-3`, `bg-brand`, `text-brand-ink`, `bg-brand-soft`, `text-ok`, `bg-night`. Daardoor werkt het lichte thema vanzelf.
 - **Tekststijlen via de classes** `text-display`, `text-h1` t/m `text-h4`, `text-body-lg`, `text-body`, `text-body-sm`, `text-label`, `text-caption`.
 - **Thema:** `data-theme="dark"` of `"light"` op `<html>`. Donker is standaard. Voor uitzonderingen in licht bestaat de variant `light:` (bijv. `light:hidden`).
@@ -131,5 +153,9 @@ Vervang dit zodra de opdrachtgever het aanlevert, en laat het tot die tijd herke
 
 - Navragen bij de opdrachtgever: KvK-nummer (7 i.p.v. 8 cijfers), btw-nummer, logo, productgegevens, projectfoto's en definitieve pakketten.
 - Zodra een pagina bestaat: `'route'` invullen in `config/site.php` (`nav`). De link gaat dan vanzelf naar de pagina in plaats van naar het blok op de homepage.
+- **E-mail bij livegang:** zet in `.env` op de server `MAIL_MAILER=smtp` met de mailgegevens van Antagonist (toegang volgt nog van de opdrachtgever). Zonder dat komen offerteaanvragen niet aan.
+- Offerteaanvragen worden nu alleen gemaild, nog niet opgeslagen. Met het adminpanel (later) ook opslaan in de database, met de statussen uit het wensenformulier.
+- Het formulier zegt "Wij gebruiken uw gegevens alleen om uw aanvraag te beantwoorden". Zodra de privacyverklaring er is: route `privacy` maken, dan staat de link vanzelf in de footer.
+- `public/favicon.ico` is een leeg bestand uit de Laravel-installatie; de site gebruikt `favicon.svg`. Vervang beide zodra het officiële logo er is.
 - Laravel Boost is niet geïnstalleerd. Het bestand `CLAUDE.md` in de hoofdmap vraagt daarom; overleg met Tawfik of jullie dat willen.
 - Trello: de zes checklists "OUD - verwijderen" staan er nog, en afgeronde taken zijn nog niet afgevinkt.

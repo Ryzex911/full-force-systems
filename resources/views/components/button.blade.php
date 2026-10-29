@@ -1,8 +1,8 @@
 {{--
     Knop of link in de huisstijl.
-    Gebruik: <x-button href="#">Offerte aanvragen</x-button>
+    Gebruik: <x-button :href="route('contact')">Contact</x-button>
     Varianten: primary (rood), secondary (rand), on-image (wit, voor op een foto), link (rode tekst met pijl).
-    Zonder href wordt het een <button>.
+    Zonder href wordt het een <button>. Verzendknop van een formulier: <x-button type="submit">Versturen</x-button>
 --}}
 @props(['variant' => 'primary', 'href' => null])
 
@@ -27,7 +27,8 @@
         @endif
     </a>
 @else
-    <button type="button" {{ $attributes->merge(['class' => $classes]) }}>
+    {{-- Standaard type="button"; voor een formulier geef je type="submit" mee --}}
+    <button {{ $attributes->merge(['type' => 'button', 'class' => $classes]) }}>
         {{ $slot }}
         @if ($variant === 'link')
             <x-icon name="arrow" class="size-[18px]" />

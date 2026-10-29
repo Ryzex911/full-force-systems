@@ -1,8 +1,11 @@
 {{--
     Kaart voor één pakket. Met featured krijgt de kaart een rode rand en het label "Meest gekozen".
     Gebruik: <x-package-card name="Plus" price="€ 1.499" text="..." :features="$lijst" featured />
+    De knop gaat naar het offerteformulier met het pakket al ingevuld. Geef href mee voor een andere bestemming,
+    bijvoorbeeld later een detailpagina van het pakket.
 --}}
-@props(['name', 'price', 'text', 'features' => [], 'featured' => false, 'href' => '#'])
+@use('App\Support\Nav')
+@props(['name', 'price', 'text', 'features' => [], 'featured' => false, 'href' => null])
 
 <article {{ $attributes->merge(['class' => 'flex flex-col gap-5 rounded-2xl bg-surface p-8 '.($featured ? 'border-2 border-brand' : 'border border-line')]) }}>
     <div class="flex items-center justify-between gap-3">
@@ -20,14 +23,12 @@
         <span class="text-body-sm pb-1.5 text-ink-3">incl. installatie</span>
     </p>
 
-    <ul class="flex flex-col gap-2.5 border-t border-line pt-5">
-        @foreach ($features as $feature)
-            <li class="text-body-sm flex items-start gap-2.5 text-ink">
-                <x-icon name="check" class="size-5 text-brand-ink" />
-                {{ $feature }}
-            </li>
-        @endforeach
-    </ul>
+    <x-check-list :items="$features" class="border-t border-line pt-5 text-ink" />
 
-    <x-button :variant="$featured ? 'primary' : 'secondary'" :href="$href" class="mt-auto w-full">Pakket bekijken</x-button>
+    <x-button
+        :variant="$featured ? 'primary' : 'secondary'"
+        :href="$href ?? Nav::quote(['pakket' => $name])"
+        class="mt-auto w-full"
+        aria-label="Pakket aanvragen: {{ $name }}"
+    >Pakket aanvragen</x-button>
 </article>

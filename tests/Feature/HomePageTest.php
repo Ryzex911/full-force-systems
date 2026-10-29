@@ -28,10 +28,24 @@ class HomePageTest extends TestCase
     {
         $response = $this->get(route('home'));
 
-        foreach (['diensten', 'pakketten', 'webshop', 'projecten', 'offerte'] as $anchor) {
+        foreach (['pakketten', 'webshop', 'projecten'] as $anchor) {
             $response->assertSee('href="'.route('home').'#'.$anchor.'"', false);
             $response->assertSee('id="'.$anchor.'"', false);
         }
+
+        // Pagina's die al bestaan krijgen een gewone link
+        foreach (['diensten', 'over-ons', 'contact'] as $page) {
+            $response->assertSee('href="'.route($page).'"', false);
+        }
+    }
+
+    public function test_quote_buttons_go_to_the_form_with_a_prefilled_choice(): void
+    {
+        $response = $this->get(route('home'));
+
+        $response->assertSee('href="'.route('contact').'#offerteformulier"', false);
+        $response->assertSee('href="'.e(route('contact', ['klant' => 'zakelijk'])).'#offerteformulier"', false);
+        $response->assertSee('href="'.e(route('contact', ['pakket' => 'Plus'])).'#offerteformulier"', false);
     }
 
     public function test_images_are_served_from_the_project(): void
