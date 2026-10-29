@@ -34,7 +34,7 @@ class ServiceController extends Controller
                 'text' => 'Kies een kant-en-klaar pakket met vaste prijs, of bestel losse producten in de webshop.',
                 'points' => ['Vaste prijs inclusief installatie', 'Pakket aan te passen', 'Betalen met iDEAL of bankoverschrijving'],
                 'button' => 'Pakket bekijken',
-                'href' => route('home').'#pakketten',
+                'href' => route('pakketten'),
                 'variant' => 'primary',
             ],
             [

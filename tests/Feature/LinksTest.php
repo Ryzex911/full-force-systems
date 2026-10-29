@@ -15,7 +15,7 @@ use Tests\TestCase;
 class LinksTest extends TestCase
 {
     /** @var array<int, string> routenamen van alle pagina's die een bezoeker kan openen */
-    private array $pages = ['home', 'diensten', 'over-ons', 'contact'];
+    private array $pages = ['home', 'diensten', 'pakketten', 'over-ons', 'contact'];
 
     /** @var array<string, string> eerder opgehaalde pagina's (url → html), zodat we elke pagina maar één keer laden */
     private array $cache = [];

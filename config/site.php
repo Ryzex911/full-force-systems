@@ -40,7 +40,7 @@ return [
     'nav' => [
         ['label' => 'Home', 'route' => 'home', 'anchor' => null],
         ['label' => 'Diensten', 'route' => 'diensten', 'anchor' => null],
-        ['label' => 'Pakketten', 'route' => null, 'anchor' => 'pakketten'],
+        ['label' => 'Pakketten', 'route' => 'pakketten', 'anchor' => null],
         ['label' => 'Webshop', 'route' => null, 'anchor' => 'webshop'],
         ['label' => 'Projecten', 'route' => null, 'anchor' => 'projecten'],
         ['label' => 'Over ons', 'route' => 'over-ons', 'anchor' => null],

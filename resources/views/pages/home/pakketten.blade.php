@@ -1,4 +1,4 @@
-{{-- Pakketten voor particulieren ($packages uit HomeController, nu nog voorbeelddata) --}}
+{{-- Pakketten voor particulieren ($packages uit HomeController, nu nog voorbeelddata). De knoppen gaan naar de pagina Pakketten. --}}
 <section id="pakketten" class="scroll-mt-32 bg-alt py-16 lg:py-24">
     <div class="wrap flex flex-col gap-12">
         <x-section-heading
@@ -15,6 +15,8 @@
                     :text="$pakket['text']"
                     :features="$pakket['features']"
                     :featured="$pakket['featured']"
+                    button="Pakket bekijken"
+                    :href="route('pakketten')"
                 />
             @endforeach
         </div>

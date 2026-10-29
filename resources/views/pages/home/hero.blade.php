@@ -30,12 +30,12 @@
 
             {{-- De hoofdactie (rode knop) volgt de keuze particulier / zakelijk in de header --}}
             <div class="flex flex-wrap gap-3 zakelijk:hidden">
-                <x-button href="#pakketten">Pakket bekijken</x-button>
+                <x-button :href="route('pakketten')">Pakket bekijken</x-button>
                 <x-button variant="on-image" :href="Nav::quote()">Offerte aanvragen</x-button>
             </div>
             <div class="hidden flex-wrap gap-3 zakelijk:flex">
                 <x-button :href="Nav::quote()">Offerte aanvragen</x-button>
-                <x-button variant="on-image" href="#pakketten">Pakketten bekijken</x-button>
+                <x-button variant="on-image" :href="route('pakketten')">Pakketten bekijken</x-button>
             </div>
         </div>
 
@@ -47,7 +47,7 @@
             <p class="text-label text-brand-ink">Start hier</p>
             <h2 class="text-h3 text-ink">Waar zoekt u beveiliging voor?</h2>
 
-            <a href="#pakketten" data-kies-klant="particulier" class="group flex items-center gap-4 rounded-xl bg-surface-2 p-[18px] transition-colors hover:bg-line">
+            <a href="{{ route('pakketten') }}" data-kies-klant="particulier" class="group flex items-center gap-4 rounded-xl bg-surface-2 p-[18px] transition-colors hover:bg-line">
                 <span class="icon-tile size-11">
                     <x-icon name="home" class="size-[22px]" />
                 </span>

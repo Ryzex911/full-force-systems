@@ -33,7 +33,7 @@ class ServicesPageTest extends TestCase
             'Voor bedrijven',
             'In vier stappen geregeld',
         ]);
-        $response->assertSee('href="'.route('home').'#pakketten"', false);
+        $response->assertSee('href="'.route('pakketten').'"', false);
         $response->assertSee('id="offerte"', false);
     }
 

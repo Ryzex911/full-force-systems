@@ -28,13 +28,13 @@ class HomePageTest extends TestCase
     {
         $response = $this->get(route('home'));
 
-        foreach (['pakketten', 'webshop', 'projecten'] as $anchor) {
+        foreach (['webshop', 'projecten'] as $anchor) {
             $response->assertSee('href="'.route('home').'#'.$anchor.'"', false);
             $response->assertSee('id="'.$anchor.'"', false);
         }
 
         // Pagina's die al bestaan krijgen een gewone link
-        foreach (['diensten', 'over-ons', 'contact'] as $page) {
+        foreach (['diensten', 'pakketten', 'over-ons', 'contact'] as $page) {
             $response->assertSee('href="'.route($page).'"', false);
         }
     }
@@ -45,7 +45,14 @@ class HomePageTest extends TestCase
 
         $response->assertSee('href="'.route('contact').'#offerteformulier"', false);
         $response->assertSee('href="'.e(route('contact', ['klant' => 'zakelijk'])).'#offerteformulier"', false);
-        $response->assertSee('href="'.e(route('contact', ['pakket' => 'Plus'])).'#offerteformulier"', false);
+        $response->assertSee('href="'.e(route('contact', ['product' => '4K IP-camera buiten'])).'#offerteformulier"', false);
+    }
+
+    public function test_package_cards_link_to_the_packages_page(): void
+    {
+        $this->get(route('home'))
+            ->assertSee('aria-label="Pakket bekijken: Plus"', false)
+            ->assertSee('href="'.route('pakketten').'"', false);
     }
 
     public function test_images_are_served_from_the_project(): void
