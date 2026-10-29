@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <!-- Tijdelijk icoon in de stijl van x-logo (rood blok met FF). Vervangen zodra het officiële logo er is. -->
+    <rect width="64" height="64" rx="14" fill="#e31f2b"/>
+    <text x="32" y="43" text-anchor="middle" font-family="Inter, Arial, Helvetica, sans-serif" font-size="30" font-weight="900" fill="#ffffff">FF</text>
+</svg>
