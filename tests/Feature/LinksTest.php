@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use App\Support\Catalog;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
@@ -14,24 +17,53 @@ use Tests\TestCase;
  */
 class LinksTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @var array<int, string> routenamen van alle pagina's die een bezoeker kan openen */
-    private array $pages = ['home', 'diensten', 'pakketten', 'webshop', 'projecten', 'over-ons', 'contact'];
+    private array $pages = [
+        'home', 'diensten', 'pakketten', 'webshop', 'projecten', 'over-ons', 'contact', 'zoeken', 'winkelwagen',
+        'legal.index', 'legal.privacy', 'legal.terms', 'legal.cookies', 'legal.returns', 'legal.shipping', 'legal.warranty', 'legal.complaints',
+    ];
+
+    /** @var array<int, string> routenamen van de pagina's van Mijn account (alleen na inloggen) */
+    private array $accountPages = ['account', 'account.bestellingen', 'account.aanvragen', 'account.favorieten', 'account.adressen', 'profile.edit'];
 
     /** @var array<string, string> eerder opgehaalde pagina's (url → html), zodat we elke pagina maar één keer laden */
     private array $cache = [];
 
-    /** @return array<int, string> alle pagina's: de routes uit $pages plus elke detailpagina van een dienst */
+    /** @return array<int, string> alle pagina's: de routes uit $pages plus elke dienst, elk product, elk project en een zoekopdracht */
     private function urls(): array
     {
         return [
             ...array_map(fn (string $page) => route($page), $this->pages),
             ...array_map(fn (array $service) => route('diensten.show', $service['slug']), config('site.services')),
+            ...array_map(fn (array $product) => route('webshop.show', $product['slug']), Catalog::products()),
+            ...array_map(fn (array $project) => route('projecten.show', $project['slug']), Catalog::projects()),
+            route('zoeken', ['q' => 'camera']),
         ];
     }
 
     public function test_every_link_on_every_page_works(): void
     {
-        foreach ($this->urls() as $url) {
+        $this->assertLinksWork($this->urls());
+    }
+
+    public function test_every_link_on_the_account_pages_and_a_filled_cart_works(): void
+    {
+        $this->actingAs(User::factory()->create());
+        $this->post(route('winkelwagen.store'), ['product' => '4k-ip-camera-buiten']);
+        $this->post(route('favorieten.toggle', 'bewegingsmelder'));
+
+        $this->assertLinksWork([
+            ...array_map(fn (string $page) => route($page), $this->accountPages),
+            route('winkelwagen'),
+        ]);
+    }
+
+    /** @param  array<int, string>  $urls */
+    private function assertLinksWork(array $urls): void
+    {
+        foreach ($urls as $url) {
             foreach ($this->links($this->html($url)) as $href) {
                 $this->assertNotSame('', trim($href), "Lege link op {$url}");
                 $this->assertNotSame('#', $href, "Dode link (#) op {$url}");

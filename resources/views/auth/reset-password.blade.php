@@ -4,7 +4,7 @@
         <div class="ff-step-symbol"><svg aria-hidden="true"><use href="#ff-icon-lock"/></svg></div>
         <div class="ff-kicker"><span></span> ACCOUNT HERSTELLEN</div>
         <h1>Nieuw <em>wachtwoord.</em></h1>
-        <p class="ff-description">Kies een nieuw, sterk wachtwoord voor je account.</p>
+        <p class="ff-description">Kies een nieuw, sterk wachtwoord voor uw account.</p>
 
         <form method="POST" action="{{ route('password.store') }}" class="ff-form" data-ff-form>
             @csrf

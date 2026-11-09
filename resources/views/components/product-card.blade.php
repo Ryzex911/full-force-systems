@@ -1,16 +1,20 @@
 {{--
     Productkaart voor de webshop.
     Zonder foto wordt het icoon van de categorie getoond.
-    Gebruik: <x-product-card icon="camera" category="Camera's" title="..." price="€ 199,00" :image="$url" />
+    Gebruik: <x-product-card :slug="$product['slug']" icon="camera" category="Camera's" title="..." price="€ 199,00" :image="$url" />
     De producten zelf staan in App\Support\Catalog::products().
-    href: link naar de productpagina (zodra die bestaat). Zonder href zijn foto en titel geen link.
-    in-stock: false toont "Niet op voorraad".
-    Zolang er geen winkelwagen is (route 'winkelwagen'), vraagt de bezoeker het product aan via het offerteformulier.
+
+    slug:     foto en titel linken naar de productpagina (/webshop/{slug}) en de knop zet het product in de winkelwagen.
+    href:     een andere link voor foto en titel (meestal niet nodig, slug regelt het).
+    in-stock: false toont "Niet op voorraad"; de bezoeker kan het product dan alleen aanvragen.
 --}}
 @use('App\Support\Nav')
-@props(['icon' => 'camera', 'category', 'title', 'price', 'image' => null, 'href' => null, 'inStock' => true])
+@props(['slug' => null, 'icon' => 'camera', 'category', 'title', 'price', 'image' => null, 'href' => null, 'inStock' => true])
 
 @php
+    $href ??= $slug ? Nav::page('webshop.show', ['slug' => $slug]) : null;
+    $winkelwagen = $slug && $inStock ? Nav::page('winkelwagen.store') : null;
+
     // Met href is de foto een link (a), zonder href een gewoon blok (div)
     $kader = $href ? 'a' : 'div';
 @endphp
@@ -50,9 +54,12 @@
             @endif
         </div>
 
-        @if (Nav::page('winkelwagen'))
-            {{-- TODO: toevoegen aan de winkelwagen zodra de webshop er is (fase 3) --}}
-            <x-button class="w-full">In winkelwagen</x-button>
+        @if ($winkelwagen)
+            <form method="POST" action="{{ $winkelwagen }}">
+                @csrf
+                <input type="hidden" name="product" value="{{ $slug }}">
+                <x-button type="submit" class="w-full" aria-label="{{ $title }} in winkelwagen">In winkelwagen</x-button>
+            </form>
         @else
             <x-button :href="Nav::quote(['product' => $title])" class="w-full" aria-label="Product aanvragen: {{ $title }}">
                 Product aanvragen

@@ -1536,12 +1536,15 @@ button {
         padding: 30px 0 70px;
     }
 
+    /* minmax(0, 1fr) in plaats van 1fr: anders wordt de kolom zo breed als alle links in het zijmenu samen
+       en scrolt de hele pagina opzij op mobiel. Nu scrolt alleen de rij met links. */
     .legal-layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .legal-sidebar {
         position: static;
+        min-width: 0;
     }
 
     .sidebar-navigation {

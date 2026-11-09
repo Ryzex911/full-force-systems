@@ -2,6 +2,7 @@
 
 Dit bestand geeft Claude de context van het project. Lees het voordat je iets wijzigt.
 Antwoord in het Nederlands, in eenvoudige taal: het team bestaat uit twee mbo-4 studenten Software Developer.
+Alles wat er over het project bekend is (pagina's, code, afspraken, valkuilen, open punten) staat in **`docs/claude-overdracht.md`**. Lees dat ook.
 
 ## Wat is dit project
 
@@ -16,10 +17,26 @@ Het bedrijf verkoopt en installeert beveiligingstechniek: camerabewaking, alarms
 
 ## Waar we nu mee bezig zijn
 
-**Alleen de front-end en opmaak.** Database, accounts, winkelmand, betalingen en adminpanel komen later.
+**Alleen de front-end en opmaak.** Database, betalingen en adminpanel komen later.
 Bouw pagina's dus met voorbeelddata in de controller, niet met modellen of migraties, tenzij daar expliciet om gevraagd wordt.
+Accounts (Laravel Breeze) bestaan al; de winkelwagen en favorieten staan in de sessie (geen database).
 
-### Stand van zaken (29-10-2026)
+### Stand van zaken (09-11-2026)
+
+**Alle pagina's uit Figma bestaan nu.** Branch `feature/paginas-afmaken` (vanaf `feature/projecten`) bevat, getest in donker en licht op 1440 en 390 px (107 tests):
+
+- **Productdetail** (`/webshop/{slug}`, route `webshop.show`, ontwerp 06): foto, prijs, voorraad, aantal (−/+) en "In winkelwagen", hartje voor favorieten, tabbladen Beschrijving/Specificaties/Installatie, "Liever laten installeren?" en "Vaak samen gekocht". Productkaarten linken nu naar deze pagina (`x-product-card :slug="..."`).
+- **Winkelwagen** (`/winkelwagen`, route `winkelwagen`): toevoegen, aantal wijzigen, verwijderen, totaal. Bewaard in de sessie (`App\Support\Cart`). Afrekenen komt later; nu gaat "Producten aanvragen" naar het offerteformulier met de producten ingevuld. Het winkelwagen-icoon in de header toont het aantal.
+- **Favorieten**: hartje op de productpagina, bewaard in de sessie (`App\Support\Favorites`), te zien in Mijn account.
+- **Project detail** (`/projecten/{slug}`, route `projecten.show`): foto, plaats/dienst/type, geleverde diensten, werkwijze, andere projecten. Geen Figma-ontwerp; in de stijl van de dienstpagina.
+- **Zoeken** (`/zoeken?q=`, route `zoeken`): zoekt in producten, diensten, pakketten en projecten. Zoekicoon in de header, zoekveld in het mobiele menu.
+- **Mijn account** (`/account`, routes `account`, `account.bestellingen`, `account.aanvragen`, `account.favorieten`, `account.adressen`, ontwerp 11): zijmenu, tellers, recente bestellingen, laatste aanvraag, standaardadres. Naam, e-mail en accounttype zijn echt; bestellingen, aanvragen en adressen zijn **voorbeelddata** (`App\Support\ExampleAccount`). `/dashboard` stuurt door naar `/account` (Breeze gebruikt de naam `dashboard`).
+- **Gegevens wijzigen** (`/profile`): nu in de huisstijl en Nederlands, binnen het accountmenu (gegevens, wachtwoord, account verwijderen).
+- **Hersteld in het werk van Tawfik:** juridische pagina's scrollen niet meer opzij op mobiel (`public/css/legal.css`), inlog-, registratie- en juridische teksten zeggen "u" in plaats van "je", en de foutmeldingen zijn Nederlands (nieuw: `lang/nl/` en `lang/nl.json`, ook voor de e-mails "wachtwoord vergeten" en "e-mail bevestigen").
+- Melding na een actie ("… staat in uw winkelwagen") via `->with('melding', [...])`, zie `partials/melding.blade.php`.
+- `LinksTest` volgt nu ook alle producten, projecten, juridische pagina's, de zoekpagina, de winkelwagen en (ingelogd) alle accountpagina's.
+
+#### Eerder (29-10-2026)
 
 - Ontwerp is klaar in Figma: 11 pagina's in donker en licht.
 - Branch `feature/homepage` staat op GitHub en bevat: huisstijl, basislayout, componenten en de homepage.
@@ -40,8 +57,9 @@ Bouw pagina's dus met voorbeelddata in de controller, niet met modellen of migra
   - **Dienst detail** (`/diensten/{slug}`, ontwerp 03): één pagina voor alle vijf diensten. Teksten van Camerabewaking komen uit het ontwerp; die van de andere vier zijn **voorbeeldtekst** en moeten nog door de opdrachtgever worden nagelezen.
 - Pakketten en producten staan nu op één plek: `App\Support\Catalog` (9 voorbeeldproducten over de zes webshopcategorieën).
 - **Bewust afgeweken van Figma** (nog bespreken met Tawfik):
-  - Productkaarten tonen "Product aanvragen" (naar het offerteformulier) in plaats van "In winkelwagen", tot de winkelwagen er is.
-  - Zoeken, account en winkelwagen staan pas in de header als die pagina's er zijn.
+  - In de winkelwagen staat "Producten aanvragen" (offerteformulier) in plaats van "Afrekenen", tot het afrekenen er is.
+  - Productpagina: geen extra kleine foto's onder de grote foto, omdat elk product nu maar één (of geen) foto heeft.
+  - Mijn account: het accounttype staat onder de titel in plaats van ernaast; op mobiel is het zijmenu een rij knoppen die opzij schuift.
   - De webshop toont paginering pas bij meer dan 9 producten. Met de 9 voorbeeldproducten is er één pagina, dus geen knoppen 1, 2, 3.
   - "Alleen op voorraad" staat niet standaard aangevinkt.
   - Op de dienstenpagina heet de knop bij elke dienst nu "Meer informatie" (naar de detailpagina).
@@ -52,15 +70,14 @@ Bouw pagina's dus met voorbeelddata in de controller, niet met modellen of migra
   - **Projecten** (`/projecten`): uitgelicht project, filter per dienst (`?dienst=...`), raster met projecten en een kaart "Uw project hier?". De projecten staan in `Catalog::projects()`.
   - **Inloggen in de header:** het persoon-icoon gaat naar `/login` als je niet bent ingelogd, en naar "Mijn account" (`/dashboard`) als je wel bent ingelogd. "Mijn account" toont naam, e-mail, "Gegevens wijzigen" en "Uitloggen".
   - Breeze-pagina's met `<x-app-layout>` (zoals het profiel) tonen hun inhoud nu binnen de site-layout. Het ontbrekende logo `images/full-force-mark.svg` van de inlogpagina is toegevoegd, en de footer linkt naar de juridische pagina's (`legal.*`).
-  - Nog open op `main`: de juridische pagina's zijn op mobiel te breed (1412 px), Alpine wordt niet geladen, de inlogpagina's gebruiken "je" in plaats van "u", en de profielpagina heeft nog de standaardopmaak van Breeze. `tailwind.config.js` en `postcss.config.js` (Tailwind 3) zijn niet meer nodig.
+  - Nog open: Alpine wordt niet geladen (de Breeze-componenten die het nodig hebben worden niet meer gebruikt), `tailwind.config.js` en `postcss.config.js` (Tailwind 3) zijn niet meer nodig.
 
 ### Volgende stappen, in deze volgorde
 
-1. Over ons en Contact naast het Figma-ontwerp leggen en waar nodig aanpassen.
-2. Overige pagina's bouwen volgens het Figma-ontwerp: Productdetail, Projecten, Inloggen/registreren, Mijn account. (Tawfik werkt op de branch `Authenticatie-bouwen`.)
-3. Per nieuwe pagina: route met naam toevoegen in `routes/web.php`, die naam invullen bij `'route'` in `config/site.php` (`nav`) als de pagina in het menu staat, en de routenaam toevoegen aan `$pages` in `tests/Feature/LinksTest.php`.
-   Gebruik voor de routenamen deze namen, dan verschijnen de verborgen links vanzelf: `projecten`, `zoeken`, `account`, `winkelwagen`, `privacy`, `voorwaarden`, `cookies`, `retourneren`.
-4. Productdetail: geef `x-product-card` dan een `href` mee (de productpagina); foto en titel worden vanzelf een link.
+1. Pull request maken voor `feature/projecten` en `feature/paginas-afmaken`, en met Tawfik de afwijkingen hieronder bespreken.
+2. Over ons, Contact en Inloggen/registreren naast het Figma-ontwerp leggen (08, 09, 10). Inloggen/registreren heeft nu een eigen lichte opmaak van Tawfik; overleg voordat je het aanpast.
+3. Volgende fase (database): bestellingen, offerteaanvragen, adressen en favorieten opslaan; daarna afrekenen (iDEAL/bankoverschrijving) en het adminpanel. De pagina's kunnen blijven; alleen `Cart`, `Favorites` en `ExampleAccount` worden vervangen door modellen.
+4. Per nieuwe pagina: route met naam toevoegen in `routes/web.php`, die naam invullen bij `'route'` in `config/site.php` (`nav`) als de pagina in het menu staat, en de routenaam toevoegen aan `$pages` in `tests/Feature/LinksTest.php`.
 
 ## Techniek
 
@@ -113,7 +130,16 @@ En in een tweede terminal: `php artisan serve` → http://localhost:8000
 | Ontwerpen en stappenplan voor Pakketten, Webshop en Dienst detail | `docs/ontwerp/`, `docs/opdracht-pakketten-webshop-dienstdetail.md` |
 | Links: menu-item (`Nav::href`), pagina die misschien nog niet bestaat (`Nav::page`), offerteformulier met ingevulde keuze (`Nav::quote`) | `app/Support/Nav.php` |
 | Tijdelijke foto's (Unsplash, lokaal opgeslagen) | `public/images/voorbeeld/` |
-| Tests per pagina, en een test die alle links volgt | `tests/Feature/` (`HomePageTest`, `ServicesPageTest`, `ServiceDetailPageTest`, `PackagesPageTest`, `WebshopPageTest`, `AboutPageTest`, `ContactPageTest`, `LinksTest`) |
+| Productpagina | `WebshopController@show`, `pages/product.blade.php` en `pages/product/` |
+| Winkelwagen (sessie) | `app/Support/Cart.php`, `CartController`, `Requests/CartItemRequest.php`, `pages/winkelwagen.blade.php` |
+| Favorieten (sessie) | `app/Support/Favorites.php`, `FavoriteController` |
+| Project detail | `ProjectController@show`, `pages/project.blade.php` |
+| Zoeken | `SearchController`, `pages/zoeken.blade.php` |
+| Mijn account + voorbeelddata bestellingen/aanvragen/adressen | `AccountController`, `app/Support/ExampleAccount.php`, `layouts/account.blade.php`, `pages/account/` |
+| Gegevens wijzigen (Breeze, in huisstijl) | `profile/edit.blade.php` en `profile/partials/` |
+| Nederlandse meldingen (inloggen, registreren, wachtwoord, e-mails) | `lang/nl/`, `lang/nl.json` |
+| Componenten (nieuw) | `x-breadcrumbs` (kruimelpad), `x-quantity` (aantal met −/+), `x-status` (statuslabel) |
+| Tests per pagina, en een test die alle links volgt | `tests/Feature/` (`HomePageTest`, `ServicesPageTest`, `ServiceDetailPageTest`, `PackagesPageTest`, `WebshopPageTest`, `ProductPageTest`, `CartTest`, `ProjectsPageTest`, `ProjectDetailPageTest`, `SearchPageTest`, `AccountPagesTest`, `AboutPageTest`, `ContactPageTest`, `LinksTest`) |
 
 ### Afspraken
 
@@ -166,7 +192,8 @@ En in een tweede terminal: `php artisan serve` → http://localhost:8000
 Vervang dit zodra de opdrachtgever het aanlevert, en laat het tot die tijd herkenbaar als voorbeeld:
 
 - Pakketten Basis/Plus/Compleet met prijzen, inhoud en de vergelijkingstabel (`App\Support\Catalog`)
-- De 9 producten: namen, prijzen, voorraad en specificaties (`App\Support\Catalog`)
+- De 9 producten: namen, prijzen, voorraad, teksten, specificaties en "vaak samen gekocht" (`App\Support\Catalog`)
+- Bestellingen, offerteaanvragen en adressen in Mijn account (`App\Support\ExampleAccount`)
 - Teksten van de detailpagina's van Alarmsystemen, Toegangscontrole, Video-intercom en Onderhoud & service (`'example' => true` in `config/site.php`)
 - Twee van de drie projecten ("Winkelpand (voorbeeld)", "Woonhuis (voorbeeld)")
 - Het logo (nu een rood blokje "FF" in `x-logo`)
@@ -176,6 +203,9 @@ Vervang dit zodra de opdrachtgever het aanlevert, en laat het tot die tijd herke
 - Juridische teksten (privacy, voorwaarden, cookies, retour) bestaan nog niet
 
 ## Open punten
+
+- `composer.json` vraagt `"laravel/breeze": "*"` bij `require`; daardoor klopt `composer.lock` niet meer (waarschuwing bij `composer install`). Met Tawfik: Breeze naar `require-dev` met een vaste versie en `composer update laravel/breeze`.
+- `resources/views/dashboard.blade.php` wordt niet meer gebruikt (`/dashboard` stuurt door naar `/account`) en mag weg.
 
 - Navragen bij de opdrachtgever: KvK-nummer (7 i.p.v. 8 cijfers), btw-nummer, logo, productgegevens, projectfoto's en definitieve pakketten.
 - Zodra een pagina bestaat: `'route'` invullen in `config/site.php` (`nav`). De link gaat dan vanzelf naar de pagina in plaats van naar het blok op de homepage.

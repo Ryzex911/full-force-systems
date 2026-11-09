@@ -25,7 +25,7 @@
         <div class="ff-aside-body">
             <div class="ff-eyebrow"><span class="ff-eyebrow-line"></span> FULL FORCE SYSTEMS <span class="ff-eyebrow-line"></span></div>
             <h2>CONTROLE.<br><span>ZEKERHEID.</span><br>VERTROUWEN.</h2>
-            <p>Beheer je aanvragen en accountgegevens eenvoudig en veilig vanuit één centrale plek.</p>
+            <p>Beheer uw aanvragen en accountgegevens eenvoudig en veilig vanuit één centrale plek.</p>
             <div class="ff-visual" aria-hidden="true">
                 <div class="ff-visual-edge ff-visual-edge-tl"></div><div class="ff-visual-edge ff-visual-edge-br"></div>
                 <div class="ff-orbit ff-orbit-outer"></div><div class="ff-orbit ff-orbit-middle"></div>

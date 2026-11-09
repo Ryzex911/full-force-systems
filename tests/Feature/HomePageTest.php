@@ -40,7 +40,10 @@ class HomePageTest extends TestCase
 
         $response->assertSee('href="'.route('contact').'#offerteformulier"', false);
         $response->assertSee('href="'.e(route('contact', ['klant' => 'zakelijk'])).'#offerteformulier"', false);
-        $response->assertSee('href="'.e(route('contact', ['product' => '4K IP-camera buiten'])).'#offerteformulier"', false);
+
+        // Productkaarten: naar de productpagina en "In winkelwagen"
+        $response->assertSee('href="'.route('webshop.show', '4k-ip-camera-buiten').'"', false);
+        $response->assertSee('action="'.route('winkelwagen.store').'"', false);
     }
 
     public function test_package_cards_link_to_the_packages_page(): void

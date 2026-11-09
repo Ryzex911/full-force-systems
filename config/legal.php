@@ -703,9 +703,9 @@ return [
             'subtitle' => 'Wij helpen klanten bij vragen en klachten.',
 
             'intro' =>
-                'Heb je een klacht over een product, dienst,
+                'Heeft u een klacht over een product, dienst,
                 bestelling of onze dienstverlening?
-                Dan kun je contact met ons opnemen.',
+                Dan kunt u contact met ons opnemen.',
 
             'sections' => [
 
@@ -717,10 +717,10 @@ return [
                         de organisatie.'
                     ],
                     'bullets' => [
-                        'Vermeld je naam.',
-                        'Vermeld je e-mailadres.',
+                        'Vermeld uw naam.',
+                        'Vermeld uw e-mailadres.',
                         'Beschrijf het probleem.',
-                        'Vermeld indien mogelijk je ordernummer.',
+                        'Vermeld indien mogelijk uw ordernummer.',
                         'Voeg eventueel foto’s of andere relevante informatie toe.',
                     ],
                 ],

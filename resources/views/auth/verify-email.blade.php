@@ -3,10 +3,10 @@
     <div class="ff-form-content ff-enter">
         <div class="ff-step-symbol"><svg aria-hidden="true"><use href="#ff-icon-mail"/></svg></div>
         <div class="ff-kicker"><span></span> LAATSTE STAP</div>
-        <h1>Bevestig je <em>e-mailadres.</em></h1>
-        <p class="ff-description">We hebben je een verificatielink gestuurd. Klik op de link in je inbox om je account te activeren. Geen mail ontvangen? Vraag een nieuwe aan.</p>
+        <h1>Bevestig uw <em>e-mailadres.</em></h1>
+        <p class="ff-description">We hebben u een verificatielink gestuurd. Klik op de link in uw inbox om uw account te activeren. Geen mail ontvangen? Vraag een nieuwe aan.</p>
         @if (session('status') == 'verification-link-sent')
-            <div class="ff-alert ff-alert-success" role="status">Er is een nieuwe verificatielink naar je e-mailadres gestuurd.</div>
+            <div class="ff-alert ff-alert-success" role="status">Er is een nieuwe verificatielink naar uw e-mailadres gestuurd.</div>
         @endif
         <form method="POST" action="{{ route('verification.send') }}" class="ff-form" data-ff-form>
             @csrf

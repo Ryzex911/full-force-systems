@@ -4,6 +4,7 @@
     Het mobiele menu, de themaknop en de keuze particulier/zakelijk werken via resources/js/app.js.
 --}}
 @use('App\Support\Nav')
+@use('App\Support\Cart')
 
 <header class="sticky top-0 z-40 bg-page">
     {{-- Bovenbalk (alleen vanaf tablet) --}}
@@ -65,9 +66,9 @@
                     </a>
                 @endif
 
-                {{-- Account: niet ingelogd → inlogpagina; ingelogd → Mijn account (dashboard). Een rood stipje = ingelogd. --}}
+                {{-- Account: niet ingelogd → inlogpagina; ingelogd → Mijn account. Een rood stipje = ingelogd. --}}
                 @auth
-                    <a href="{{ route('dashboard') }}" class="relative flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Mijn account" title="Mijn account">
+                    <a href="{{ route('account') }}" class="relative flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Mijn account" title="Mijn account">
                         <x-icon name="user" class="size-[22px]" />
                         <span class="absolute top-2 right-2 size-2 rounded-full bg-brand ring-2 ring-page" aria-hidden="true"></span>
                     </a>
@@ -77,9 +78,16 @@
                     </a>
                 @endauth
 
+                {{-- Winkelwagen, met het aantal producten erbij (uit de sessie, zie App\Support\Cart) --}}
                 @if ($link = Nav::page('winkelwagen'))
-                    <a href="{{ $link }}" class="flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Winkelwagen">
+                    @php
+                        $aantalInWagen = Cart::count();
+                    @endphp
+                    <a href="{{ $link }}" class="relative flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2" aria-label="Winkelwagen{{ $aantalInWagen ? ', '.$aantalInWagen.' '.($aantalInWagen === 1 ? 'product' : 'producten') : ', leeg' }}" @if (request()->routeIs('winkelwagen')) aria-current="page" @endif>
                         <x-icon name="cart" class="size-[22px]" />
+                        @if ($aantalInWagen)
+                            <span class="absolute top-0.5 right-0 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand px-1 text-[11px] leading-none font-bold text-white" aria-hidden="true">{{ $aantalInWagen > 99 ? '99+' : $aantalInWagen }}</span>
+                        @endif
                     </a>
                 @endif
 
@@ -123,8 +131,13 @@
                     @include('partials.klanttype-keuze')
                 </div>
                 <x-button :href="Nav::quote()" class="w-full">Offerte aanvragen</x-button>
+                @if ($link = Nav::page('zoeken'))
+                    <form method="GET" action="{{ $link }}" role="search" class="sm:hidden">
+                        <x-field name="q" label="Zoeken op de site" type="search" size="sm" icon="search" :hide-label="true" placeholder="Zoek producten, diensten…" id="mobiel-zoeken" />
+                    </form>
+                @endif
                 @auth
-                    <x-button variant="secondary" :href="route('dashboard')" class="w-full">Mijn account</x-button>
+                    <x-button variant="secondary" :href="route('account')" class="w-full">Mijn account</x-button>
                 @else
                     <x-button variant="secondary" :href="route('login')" class="w-full">Inloggen</x-button>
                 @endauth

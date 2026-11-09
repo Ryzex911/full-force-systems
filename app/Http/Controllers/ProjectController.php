@@ -37,4 +37,20 @@ class ProjectController extends Controller
             'projects' => $projects->reject(fn (array $project) => $project === $featured)->values(),
         ]);
     }
+
+    /**
+     * Toon één project: /projecten/tax-administraties
+     * Met de diensten die bij het project horen en de andere projecten eronder.
+     */
+    public function show(string $slug): View
+    {
+        $projects = collect(Catalog::projects());
+        $project = $projects->firstWhere('slug', $slug) ?? abort(404);
+
+        return view('pages.project', [
+            'project' => $project,
+            'services' => collect(config('site.services'))->whereIn('slug', $project['services'])->values(),
+            'others' => $projects->reject(fn (array $ander) => $ander['slug'] === $slug)->values(),
+        ]);
+    }
 }

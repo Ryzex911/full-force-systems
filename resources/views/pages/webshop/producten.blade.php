@@ -35,6 +35,7 @@
         <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             @foreach ($products as $product)
                 <x-product-card
+                    :slug="$product['slug']"
                     :icon="$product['icon']"
                     :category="$product['category']"
                     :title="$product['title']"

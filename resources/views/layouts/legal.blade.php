@@ -322,7 +322,7 @@
                         </h3>
 
                         <p>
-                            Heb je een vraag over privacy,
+                            Heeft u een vraag over privacy,
                             garantie of een van onze voorwaarden?
                         </p>
 

@@ -54,6 +54,7 @@
                 :location="$project['location']"
                 :image="$project['image']"
                 :alt="$project['alt']"
+            :href="route('projecten.show', $project['slug'])"
             />
         @endforeach
 

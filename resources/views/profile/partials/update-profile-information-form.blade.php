@@ -1,63 +1,55 @@
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Profile Information') }}
-        </h2>
-
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your account's profile information and email address.") }}
-        </p>
+{{-- Naam en e-mailadres wijzigen (ProfileController@update). Bij een nieuw e-mailadres moet de klant het opnieuw bevestigen. --}}
+<section id="gegevens" class="card scroll-mt-36 flex flex-col gap-6 p-6 sm:p-8">
+    <header class="flex flex-col gap-1">
+        <h2 class="text-h3 text-ink">Uw gegevens</h2>
+        <p class="text-body-sm text-ink-2">Pas uw naam en e-mailadres aan.</p>
     </header>
 
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
+    {{-- Los formulier voor "bevestigingsmail opnieuw sturen"; de knop staat verderop (form="send-verification") --}}
+    <form id="send-verification" method="POST" action="{{ route('verification.send') }}">
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="POST" action="{{ route('profile.update') }}" class="flex max-w-[560px] flex-col gap-5">
         @csrf
         @method('patch')
 
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
-        </div>
+        <x-field name="name" label="Naam" :value="$user->name" required autocomplete="name" />
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+        <div class="flex flex-col gap-3">
+            <x-field name="email" label="E-mailadres" type="email" :value="$user->email" required autocomplete="username" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div>
-                    <p class="text-sm mt-2 text-gray-800">
-                        {{ __('Your email address is unverified.') }}
-
-                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
+                <div class="text-body-sm flex flex-col gap-2 rounded-lg bg-surface-2 p-4 text-ink-2">
+                    <p>
+                        Uw e-mailadres is nog niet bevestigd.
+                        <button form="send-verification" class="font-semibold text-brand-ink hover:underline">Stuur de bevestigingsmail opnieuw.</button>
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </p>
+                        <p class="font-semibold text-ok">Er is een nieuwe bevestigingslink naar uw e-mailadres gestuurd.</p>
                     @endif
                 </div>
             @endif
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+        {{-- Accounttype: wordt gekozen bij het registreren --}}
+        <dl class="text-body-sm flex flex-col gap-1">
+            <dt class="font-semibold text-ink">Accounttype</dt>
+            <dd class="text-ink-2">
+                {{ $user->account_type === 'zakelijk' ? 'Zakelijk' : 'Particulier' }}@if ($user->company_name) · {{ $user->company_name }}@endif
+                <span class="text-ink-3">— wilt u dit wijzigen? Neem contact met ons op.</span>
+            </dd>
+        </dl>
+
+        <div class="flex flex-wrap items-center gap-4">
+            <x-button type="submit">Opslaan</x-button>
 
             @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
+                <p class="text-body-sm flex items-center gap-1.5 text-ok" role="status">
+                    <x-icon name="check-circle" class="size-4" />
+                    Opgeslagen.
+                </p>
             @endif
         </div>
     </form>

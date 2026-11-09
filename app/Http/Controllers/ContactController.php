@@ -40,7 +40,7 @@ class ContactController extends Controller
             'services' => $services,
             'prefill' => [
                 'dienst' => $services->has($dienst) ? $dienst : null,
-                'producten' => $producten ? Str::limit((string) $producten, 100, '') : null,
+                'producten' => $producten ? Str::limit((string) $producten, 255, '') : null,
                 'klanttype' => in_array($klant, ['particulier', 'zakelijk'], true) ? $klant : null,
             ],
         ]);

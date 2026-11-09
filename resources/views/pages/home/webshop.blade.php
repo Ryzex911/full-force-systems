@@ -16,6 +16,7 @@
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($products as $product)
                 <x-product-card
+                    :slug="$product['slug']"
                     :icon="$product['icon']"
                     :category="$product['category']"
                     :title="$product['title']"

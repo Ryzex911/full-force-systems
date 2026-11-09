@@ -11,15 +11,17 @@
       :hide-label="true"      label alleen voor schermlezers (sr-only), bijvoorbeeld bij een zoekveld met icoon
       :mark-optional="false"  geen "(optioneel)" achter het label
       :placeholder="false"    bij een select: geen lege eerste keuze
+      bag="updatePassword"    foutmeldingen uit een andere error bag (Breeze gebruikt die bij wachtwoord en account verwijderen)
+      id="..."                eigen id, als hetzelfde veld twee keer op een pagina staat (zoals het zoekveld in het mobiele menu)
 --}}
 @props([
     'name', 'label', 'type' => 'text', 'value' => null, 'required' => false, 'hint' => null, 'options' => [], 'placeholder' => null,
-    'size' => 'md', 'icon' => null, 'hideLabel' => false, 'markOptional' => true,
+    'size' => 'md', 'icon' => null, 'hideLabel' => false, 'markOptional' => true, 'id' => null, 'bag' => 'default',
 ])
 
 @php
-    $id = 'veld-'.$name;
-    $fout = $errors->first($name);
+    $id ??= 'veld-'.$name;
+    $fout = isset($errors) ? $errors->getBag($bag)->first($name) : null; // op foutpagina's (404) is er geen $errors
     $waarde = old($name, $value);
     $beschrijving = trim(($hint ? $id.'-hint ' : '').($fout ? $id.'-fout' : ''));
 

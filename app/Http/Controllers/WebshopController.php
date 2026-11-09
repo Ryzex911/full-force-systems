@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Support\Catalog;
+use App\Support\Favorites;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -53,6 +54,21 @@ class WebshopController extends Controller
             'query' => $this->query($filters),
             'sortOptions' => self::SORT_OPTIONS,
             'hasFilters' => $this->query($filters) !== [],
+        ]);
+    }
+
+    /**
+     * Toon één product: /webshop/4k-ip-camera-buiten (ontwerp 06, productdetail).
+     * Het product en "Vaak samen gekocht" zijn VOORBEELDDATA uit App\Support\Catalog.
+     */
+    public function show(string $slug): View
+    {
+        $product = Catalog::product($slug) ?? abort(404);
+
+        return view('pages.product', [
+            'product' => $product,
+            'related' => Catalog::productsBySlug($product['related']),
+            'isFavorite' => Favorites::has($slug),
         ]);
     }
 

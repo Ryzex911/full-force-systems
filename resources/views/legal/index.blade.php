@@ -28,7 +28,7 @@
 
             <p>
                 Bij Full Force Systems vinden we het belangrijk
-                dat je precies weet waar je aan toe bent.
+                dat u precies weet waar u aan toe bent.
 
                 Daarom hebben we alle informatie over onze
                 voorwaarden, privacy en dienstverlening
@@ -212,7 +212,7 @@
                     over hun rechten, verplichtingen en de
                     manier waarop wij met gegevens omgaan.
 
-                    Heb je vragen over een document?
+                    Heeft u vragen over een document?
                     Neem dan contact met ons op.
                 </p>
 

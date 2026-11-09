@@ -4,6 +4,8 @@
  |  2. Mobiel menu openen en sluiten (ook met Escape)
  |  3. Keuze particulier / zakelijk onthouden en overal gelijk houden
  |  4. Webshopfilters direct toepassen
+ |  5. Aantal kiezen met − en + (productpagina, winkelwagen)
+ |  6. Tabbladen op de productpagina
  */
 
 /** Lees een waarde uit localStorage. Geeft null terug als opslag niet beschikbaar is. */
@@ -132,4 +134,88 @@ document.querySelectorAll('form[data-auto-filter]').forEach((formulier) => {
             }
         }
     });
+});
+
+// 5. Aantal kiezen -----------------------------------------------------------
+// <x-quantity> heeft een getalveld met een − en + knop (data-aantal). Zonder JavaScript typt de bezoeker het aantal.
+// Staat het veld in een formulier met data-auto-verzenden (de winkelwagen), dan wordt het formulier na een wijziging
+// meteen verstuurd. Een kleine pauze voorkomt dat elke klik op + een aparte aanvraag wordt.
+document.querySelectorAll('[data-aantal]').forEach((blok) => {
+    const veld = blok.querySelector('input');
+    const formulier = blok.closest('form[data-auto-verzenden]');
+    let wachttijd;
+
+    const verander = (stap) => {
+        const min = Number(veld.min || 0);
+        const max = Number(veld.max || 99);
+        const nieuw = Math.min(max, Math.max(min, (Number(veld.value) || 0) + stap));
+
+        if (nieuw !== Number(veld.value)) {
+            veld.value = nieuw;
+            veld.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    };
+
+    blok.querySelector('[data-aantal-min]')?.addEventListener('click', () => verander(-1));
+    blok.querySelector('[data-aantal-plus]')?.addEventListener('click', () => verander(1));
+
+    if (formulier) {
+        veld.addEventListener('change', () => {
+            clearTimeout(wachttijd);
+            wachttijd = setTimeout(() => formulier.requestSubmit(), 500);
+        });
+    }
+});
+
+// Met JavaScript is de knop "Bijwerken" in de winkelwagen niet nodig (het formulier verstuurt zichzelf).
+document.querySelectorAll('form[data-auto-verzenden] [data-zonder-js]').forEach((element) => {
+    element.hidden = true;
+});
+
+// 6. Tabbladen -----------------------------------------------------------------
+// Blok met data-tabs: links met data-tab="naam" en panelen met data-tab-paneel="naam".
+// Zonder JavaScript zijn alle panelen zichtbaar en springen de links naar het paneel.
+document.querySelectorAll('[data-tabs]').forEach((blok) => {
+    const lijst = blok.querySelector('[data-tab-lijst]');
+    const tabs = [...blok.querySelectorAll('[data-tab]')];
+    const panelen = [...blok.querySelectorAll('[data-tab-paneel]')];
+
+    lijst.setAttribute('role', 'tablist');
+
+    const toon = (naam, focus = false) => {
+        tabs.forEach((tab) => {
+            const actief = tab.dataset.tab === naam;
+            tab.setAttribute('aria-selected', String(actief));
+            tab.tabIndex = actief ? 0 : -1;
+            if (actief && focus) tab.focus();
+        });
+        panelen.forEach((paneel) => {
+            paneel.hidden = paneel.dataset.tabPaneel !== naam;
+        });
+    };
+
+    tabs.forEach((tab, nummer) => {
+        tab.setAttribute('role', 'tab');
+        tab.setAttribute('aria-controls', 'tab-' + tab.dataset.tab);
+
+        tab.addEventListener('click', (event) => {
+            event.preventDefault();
+            toon(tab.dataset.tab);
+        });
+
+        // Pijltjestoetsen links/rechts wisselen van tabblad (zoals schermlezers verwachten)
+        tab.addEventListener('keydown', (event) => {
+            const richting = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+            if (richting) {
+                event.preventDefault();
+                toon(tabs[(nummer + richting + tabs.length) % tabs.length].dataset.tab, true);
+            }
+        });
+    });
+
+    panelen.forEach((paneel) => paneel.setAttribute('role', 'tabpanel'));
+
+    // Begin met het tabblad uit de url (#tab-specificaties), anders het eerste
+    const uitUrl = tabs.find((tab) => '#tab-' + tab.dataset.tab === window.location.hash);
+    toon((uitUrl || tabs[0]).dataset.tab);
 });

@@ -55,6 +55,8 @@
         @include('partials.header')
 
         <main id="inhoud">
+            @include('partials.melding')
+
             @yield('content')
 
             {{-- Pagina's van Laravel Breeze (zoals het profiel) gebruiken <x-app-layout>: hun inhoud zit in $header en $slot --}}

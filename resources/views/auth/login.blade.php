@@ -2,8 +2,8 @@
     @section('title', 'Inloggen')
     <div class="ff-form-content ff-enter">
         <div class="ff-kicker"><span></span> WELKOM TERUG</div>
-        <h1>Log in op je <em>account.</em></h1>
-        <p class="ff-description">Voer je gegevens in om veilig verder te gaan.</p>
+        <h1>Log in op uw <em>account.</em></h1>
+        <p class="ff-description">Vul uw gegevens in om veilig verder te gaan.</p>
 
         @if (session('status'))
             <div class="ff-alert ff-alert-success" role="status">{{ session('status') }}</div>
@@ -24,7 +24,7 @@
                 <div class="ff-label-row"><label for="password">Wachtwoord</label><a class="ff-text-link" href="{{ route('password.request') }}">Wachtwoord vergeten?</a></div>
                 <div class="ff-input-wrap @error('password') ff-input-error @enderror">
                     <svg aria-hidden="true"><use href="#ff-icon-lock"/></svg>
-                    <input id="password" type="password" name="password" placeholder="Vul je wachtwoord in" autocomplete="current-password" required>
+                    <input id="password" type="password" name="password" placeholder="Vul uw wachtwoord in" autocomplete="current-password" required>
                     <button type="button" class="ff-show-password" data-password-toggle="password" aria-label="Toon wachtwoord" aria-pressed="false"><svg aria-hidden="true"><use href="#ff-icon-eye"/></svg></button>
                 </div>
                 @error('password') <p class="ff-error" role="alert">{{ $message }}</p> @enderror
@@ -34,6 +34,6 @@
             <button type="submit" class="ff-btn ff-btn-primary"><span>Inloggen</span><span class="ff-btn-arrow" aria-hidden="true">↗</span></button>
         </form>
         <div class="ff-switch">Nog geen account? <a href="{{ route('register') }}">Maak een account aan <span aria-hidden="true">→</span></a></div>
-        <div class="ff-form-trust"><svg aria-hidden="true"><use href="#ff-icon-lock"/></svg> Je verbinding is beveiligd</div>
+        <div class="ff-form-trust"><svg aria-hidden="true"><use href="#ff-icon-lock"/></svg> Uw verbinding is beveiligd</div>
     </div>
 </x-guest-layout>

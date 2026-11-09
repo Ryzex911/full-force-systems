@@ -4,7 +4,7 @@
         <div class="ff-step-symbol"><svg aria-hidden="true"><use href="#ff-icon-lock"/></svg></div>
         <div class="ff-kicker"><span></span> ACCOUNT HERSTELLEN</div>
         <h1>Wachtwoord <em>vergeten?</em></h1>
-        <p class="ff-description">Geen probleem. Vul je e-mailadres in. Je ontvangt een link om een nieuw wachtwoord in te stellen.</p>
+        <p class="ff-description">Geen probleem. Vul uw e-mailadres in. U ontvangt een link om een nieuw wachtwoord in te stellen.</p>
 
         @if (session('status')) <div class="ff-alert ff-alert-success" role="status">{{ session('status') }}</div> @endif
 

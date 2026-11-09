@@ -20,7 +20,7 @@ class AccountHeaderTest extends TestCase
 
     public function test_guests_are_sent_to_the_login_page_for_their_account(): void
     {
-        $this->get(route('dashboard'))->assertRedirect(route('login'));
+        $this->get(route('account'))->assertRedirect(route('login'));
     }
 
     public function test_logged_in_users_see_my_account_in_the_header_and_their_details(): void
@@ -28,16 +28,19 @@ class AccountHeaderTest extends TestCase
         $user = User::factory()->create(['name' => 'Jan de Vries', 'email' => 'jan@voorbeeld.nl']);
 
         $this->actingAs($user)->get(route('home'))
-            ->assertSee('href="'.route('dashboard').'"', false)
+            ->assertSee('href="'.route('account').'"', false)
             ->assertSee('aria-label="Mijn account"', false)
             ->assertDontSee('aria-label="Inloggen"', false);
 
-        $this->actingAs($user)->get(route('dashboard'))
+        $this->actingAs($user)->get(route('account'))
             ->assertOk()
             ->assertSee('Mijn account')
-            ->assertSee('Jan de Vries')
-            ->assertSee('jan@voorbeeld.nl')
+            ->assertSee('Welkom, Jan de Vries')
+            ->assertSee('Particulier account')
             ->assertSee('action="'.route('logout').'"', false);
+
+        // Het e-mailadres staat bij "Gegevens"
+        $this->actingAs($user)->get(route('profile.edit'))->assertSee('jan@voorbeeld.nl');
     }
 
     public function test_profile_page_shows_its_content_inside_the_site_layout(): void
@@ -47,7 +50,11 @@ class AccountHeaderTest extends TestCase
         $this->actingAs($user)->get(route('profile.edit'))
             ->assertOk()
             ->assertSee('Hoofdnavigatie')
-            ->assertSee('name="email"', false);
+            ->assertSee('Uw gegevens')
+            ->assertSee('Wachtwoord wijzigen')
+            ->assertSee('Account verwijderen')
+            ->assertSee('name="email"', false)
+            ->assertDontSee('Profile Information');
     }
 
     public function test_users_can_log_out(): void

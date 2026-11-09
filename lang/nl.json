@@ -1,0 +1,15 @@
+{
+    "Hello!": "Beste klant,",
+    "Whoops!": "Er ging iets mis.",
+    "Regards,": "Met vriendelijke groet,",
+    "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:": "Werkt de knop \":actionText\" niet? Kopieer dan deze link en plak hem in uw browser:",
+    "Verify Email Address": "E-mailadres bevestigen",
+    "Verify your email address": "Bevestig uw e-mailadres",
+    "Please click the button below to verify your email address.": "Klik op de knop hieronder om uw e-mailadres te bevestigen.",
+    "If you did not create an account, no further action is required.": "Heeft u geen account aangemaakt? Dan hoeft u niets te doen.",
+    "Reset your password": "Wachtwoord wijzigen",
+    "Reset Password": "Nieuw wachtwoord instellen",
+    "You are receiving this email because we received a password reset request for your account.": "U ontvangt deze e-mail omdat er een nieuw wachtwoord is aangevraagd voor uw account.",
+    "This password reset link will expire in :count minutes.": "Deze link is :count minuten geldig.",
+    "If you did not request a password reset, no further action is required.": "Heeft u geen nieuw wachtwoord aangevraagd? Dan hoeft u niets te doen."
+}

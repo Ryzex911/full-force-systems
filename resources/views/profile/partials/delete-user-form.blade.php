@@ -1,55 +1,32 @@
-<section class="space-y-6">
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Delete Account') }}
-        </h2>
-
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
-        </p>
+{{--
+    Account verwijderen (ProfileController@destroy). Foutmeldingen staan in de error bag 'userDeletion'.
+    Het formulier zit in een uitklapblok (<details>), zodat niemand per ongeluk op "verwijderen" klikt.
+    Bij een fout (verkeerd wachtwoord) staat het blok meteen open.
+--}}
+<section id="verwijderen" class="card scroll-mt-36 flex flex-col gap-4 p-6 sm:p-8">
+    <header class="flex flex-col gap-1">
+        <h2 class="text-h3 text-ink">Account verwijderen</h2>
+        <p class="text-body-sm text-ink-2">Als u uw account verwijdert, worden al uw gegevens definitief gewist. Dit kan niet ongedaan worden gemaakt.</p>
     </header>
 
-    <x-danger-button
-        x-data=""
-        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-    >{{ __('Delete Account') }}</x-danger-button>
+    <details class="group" @if ($errors->userDeletion->isNotEmpty()) open @endif>
+        <summary class="text-body-sm inline-flex cursor-pointer list-none items-center gap-2 rounded-lg border border-brand-ink px-5 py-3 font-semibold text-brand-ink hover:bg-brand-soft group-open:hidden [&::-webkit-details-marker]:hidden">
+            <x-icon name="trash" class="size-4" />
+            Account verwijderen
+        </summary>
 
-    <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
-        <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
+        <form method="POST" action="{{ route('profile.destroy') }}" class="flex max-w-[560px] flex-col gap-5 rounded-lg border border-line bg-surface-2 p-5">
             @csrf
             @method('delete')
 
-            <h2 class="text-lg font-medium text-gray-900">
-                {{ __('Are you sure you want to delete your account?') }}
-            </h2>
+            <p class="text-body-sm text-ink">Weet u het zeker? Vul ter bevestiging uw wachtwoord in.</p>
 
-            <p class="mt-1 text-sm text-gray-600">
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
-            </p>
+            <x-field name="password" id="delete_password" label="Wachtwoord" type="password" bag="userDeletion" required autocomplete="current-password" />
 
-            <div class="mt-6">
-                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
-
-                <x-text-input
-                    id="password"
-                    name="password"
-                    type="password"
-                    class="mt-1 block w-3/4"
-                    placeholder="{{ __('Password') }}"
-                />
-
-                <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
-            </div>
-
-            <div class="mt-6 flex justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">
-                    {{ __('Cancel') }}
-                </x-secondary-button>
-
-                <x-danger-button class="ms-3">
-                    {{ __('Delete Account') }}
-                </x-danger-button>
+            <div class="flex flex-wrap gap-3">
+                <x-button type="submit">Ja, verwijder mijn account</x-button>
+                <x-button variant="secondary" :href="route('profile.edit')">Annuleren</x-button>
             </div>
         </form>
-    </x-modal>
+    </details>
 </section>
