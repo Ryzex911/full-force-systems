@@ -70,7 +70,6 @@ Accounts (Laravel Breeze) bestaan al; de winkelwagen en favorieten staan in de s
   - **Projecten** (`/projecten`): uitgelicht project, filter per dienst (`?dienst=...`), raster met projecten en een kaart "Uw project hier?". De projecten staan in `Catalog::projects()`.
   - **Inloggen in de header:** het persoon-icoon gaat naar `/login` als je niet bent ingelogd, en naar "Mijn account" (`/dashboard`) als je wel bent ingelogd. "Mijn account" toont naam, e-mail, "Gegevens wijzigen" en "Uitloggen".
   - Breeze-pagina's met `<x-app-layout>` (zoals het profiel) tonen hun inhoud nu binnen de site-layout. Het ontbrekende logo `images/full-force-mark.svg` van de inlogpagina is toegevoegd, en de footer linkt naar de juridische pagina's (`legal.*`).
-  - Nog open: Alpine wordt niet geladen (de Breeze-componenten die het nodig hebben worden niet meer gebruikt), `tailwind.config.js` en `postcss.config.js` (Tailwind 3) zijn niet meer nodig.
 
 ### Volgende stappen, in deze volgorde
 
@@ -204,8 +203,7 @@ Vervang dit zodra de opdrachtgever het aanlevert, en laat het tot die tijd herke
 
 ## Open punten
 
-- `composer.json` vraagt `"laravel/breeze": "*"` bij `require`; daardoor klopt `composer.lock` niet meer (waarschuwing bij `composer install`). Met Tawfik: Breeze naar `require-dev` met een vaste versie en `composer update laravel/breeze`.
-- `resources/views/dashboard.blade.php` wordt niet meer gebruikt (`/dashboard` stuurt door naar `/account`) en mag weg.
+- **Opgeruimd (10-11-2026):** ongebruikte Breeze-restjes weg (`dashboard.blade.php`, `layouts/navigation.blade.php`, `AppLayout`, 13 Breeze-componenten), `tailwind.config.js` en `postcss.config.js` weg, ongebruikte npm-pakketten weg (`alpinejs`, `@tailwindcss/forms`, `autoprefixer`, `postcss`), Breeze vast op `^2.4` in `require-dev` (`composer.lock` klopt weer) en beveiligingsupdates voor Symfony en npm (`composer audit` en `npm audit`: 0 meldingen).
 
 - Navragen bij de opdrachtgever: KvK-nummer (7 i.p.v. 8 cijfers), btw-nummer, logo, productgegevens, projectfoto's en definitieve pakketten.
 - Zodra een pagina bestaat: `'route'` invullen in `config/site.php` (`nav`). De link gaat dan vanzelf naar de pagina in plaats van naar het blok op de homepage.

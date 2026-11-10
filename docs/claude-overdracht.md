@@ -99,13 +99,13 @@ Accountpagina's hebben de middleware `auth` + `verified`; `/profile` alleen `aut
 ## 4. Techniek
 
 - **Laravel 13**, **PHP 8.4+**. Verplicht: `symfony/clock` in `composer.lock` werkt niet op 8.3. In Laragon: rechtsklik → PHP → Version → 8.4, en open daarna een nieuwe terminal.
-- **Blade**, **Tailwind CSS 4** via Vite (`@tailwindcss/vite`). Er is **geen** `tailwind.config.js` nodig; `tailwind.config.js` en `postcss.config.js` zijn restjes van Tailwind 3.
+- **Blade**, **Tailwind CSS 4** via Vite (`@tailwindcss/vite`). Er is **geen** `tailwind.config.js` of `postcss.config.js` (die restjes van Tailwind 3 zijn verwijderd).
 - Lettertype **Inter** via de fonts-optie van `laravel-vite-plugin` (`bunny('Inter', …)` in `vite.config.js`) en `@fonts` in de layout.
 - **Database:** lokaal SQLite (`database/database.sqlite`), later MySQL. De sessies staan in de database: zonder `php artisan migrate` crasht elke pagina.
 - **Auth:** Laravel Breeze. `User` implementeert `MustVerifyEmail`. Extra kolommen `account_type` (`particulier`/`zakelijk`) en `company_name` (migratie `2026_10_15_122020_add_customer_account_fields_to_users_table.php`).
 - **Mail:** lokaal `MAIL_MAILER=log`, dus mails (offertes, bevestigingslinks, wachtwoord vergeten) staan in `storage/logs/laravel.log`. Bij livegang `smtp` met de gegevens van Antagonist.
 - **Taal:** `APP_LOCALE=nl`. Nederlandse meldingen staan in `lang/nl/` (`auth.php`, `passwords.php`, `validation.php`, `pagination.php`) en `lang/nl.json` (teksten van de Breeze-e-mails).
-- **Geen Alpine.js**: het wordt niet geladen. De Breeze-componenten die het nodig hebben (modal, dropdown) worden niet meer gebruikt. Al het gedrag zit in `resources/js/app.js`.
+- **Geen Alpine.js**: niet geïnstalleerd en niet nodig. De Breeze-componenten die het gebruikten (modal, dropdown, navigation) zijn verwijderd. Al het gedrag zit in `resources/js/app.js`.
 
 ### Starten (eerste keer)
 ```
@@ -168,7 +168,6 @@ php artisan test
 | `x-package-card` | Pakketkaart (pakketten en home) |
 | `x-quantity` | Aantal met − en +: `name`, `:value`, `:min`, `label`, `id` |
 | `x-status` | Statuslabel: `<x-status status="Verzonden" />` (kleuren in `ExampleAccount::STATUS_COLORS`) |
-| Breeze-restjes (`primary-button`, `text-input`, `modal`, `dropdown`, `nav-link` …) | Worden door onze pagina's niet gebruikt. Gebruik ze niet voor nieuwe pagina's. |
 
 ---
 
@@ -280,9 +279,7 @@ Vervang dit zodra de opdrachtgever het aanlevert, en laat het tot die tijd herke
 2. Met Tawfik bespreken:
    - de afwijkingen uit §9;
    - de opmaak van inloggen/registreren en de juridische pagina's (eigen layouts, geen hoofdmenu, lichte stijl);
-   - `composer.json` heeft `"laravel/breeze": "*"` bij `require`, waardoor `composer.lock` niet klopt (waarschuwing bij `composer install`). Oplossing: Breeze naar `require-dev` met een vaste versie, dan `composer update laravel/breeze`;
-   - `resources/views/dashboard.blade.php` wordt niet meer gebruikt en mag weg (`git rm`);
-   - `tailwind.config.js` en `postcss.config.js` (Tailwind 3) kunnen weg;
+   - **Opgeruimd (10-11-2026):** ongebruikte Breeze-restjes weg (`dashboard.blade.php`, `layouts/navigation.blade.php`, `AppLayout`, 13 Breeze-componenten), `tailwind.config.js` en `postcss.config.js` weg, ongebruikte npm-pakketten weg (`alpinejs`, `@tailwindcss/forms`, `autoprefixer`, `postcss`), Breeze vast op `^2.4` in `require-dev` (`composer.lock` klopt weer) en beveiligingsupdates voor Symfony en npm (`composer audit` en `npm audit`: 0 meldingen).
    - Laravel Boost: het bestand `CLAUDE.md` in de hoofdmap vraagt om het te installeren. Dat is nog niet gedaan; samen beslissen.
 3. Over ons, Contact en Inloggen/registreren naast Figma (08, 09, 10) leggen.
 
